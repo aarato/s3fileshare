@@ -1,0 +1,74 @@
+{
+  "name": "s3fileshare",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@aws-amplify/core": "^4.3.0",
+    "@aws-sdk/client-cognito-identity": "^3.33.0",
+    "@aws-sdk/client-s3": "^3.33.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.33.0",
+    "@aws-sdk/s3-request-presigner": "^3.33.0",
+    "@popperjs/core": "^2.9.2",
+    "amazon-cognito-identity-js": "^5.1.1",
+    "axios": "^0.21.1",
+    "bootstrap": "^5.1.1",
+    "core-js": "^3.6.5",
+    "date-fns": "^2.24.0",
+    "file-saver": "^2.0.5",
+    "postcss": "^8.3.0",
+    "socket.io-client": "^4.1.2",
+    "streamsaver": "^2.0.5",
+    "uuid": "^8.3.2",
+    "vue": "^3.0.0",
+    "vuex": "^4.0.1",
+    "websocket": "^1.0.34",
+    "yaml": "^1.10.2"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.0.17",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "vue-loader-v16": "^16.0.0-beta.5.4"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "description": "## Project setup ``` npm install ```",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucipass/s3fileshare.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ucipass/s3fileshare/issues"
+  },
+  "homepage": "https://github.com/ucipass/s3fileshare#readme"
+}
