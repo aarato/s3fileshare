@@ -34,7 +34,7 @@ export default {
   async mounted(){
     try {
       let jsonfile = process.env.NODE_ENV === "development" 
-        ? await fetch("https://s3.us-east-1.amazonaws.com/copyrun/awsconfig.json").then( response => response.text())
+        ? await fetch("https://s3.us-east-1.amazonaws.com/copyruntest/awsconfig.json").then( response => response.text())
         : await fetch("awsconfig.json").then( response => response.text())
       let config = JSON.parse(jsonfile)
       this.$store.commit("setState", { name: "region", value: config.region } ) 
