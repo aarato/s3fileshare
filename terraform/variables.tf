@@ -4,6 +4,12 @@ variable "name" {
   description = "Unique AWS S3 bucket name that is also used as a prefix for ALL resource names created by Terraform."
 }
 
+variable "s3folder" {
+  default="files"
+  type = string
+  description = "S3 folder name where secured files are to be stored"
+}
+
 variable "region" {
   default="us-east-1"
   type = string

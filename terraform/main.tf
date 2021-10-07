@@ -3,6 +3,7 @@ provider "aws" {
   # version = "~> 2.3"
 }
 
+# Used as data.aws_caller_identity.current.account_id
 data "aws_caller_identity" "current" {}
 
 data "template_file" "aws_config" {

@@ -19,6 +19,8 @@ const store = createStore({
         toastId: "liveToast",
         toastMessage: "",
         clipboard: "",
+        uploadPartSize: "5242880",
+        uploadPercent: "0",
         input: {
           name: "input",
           input_rows: [
@@ -54,7 +56,13 @@ const store = createStore({
           values:{
             s3fileupload: null,
           }
-        }
+        },
+        visible: {
+          navDownload: true,
+          navUpload: false,
+          navClipboard: false,
+          navSettings: false
+        }   
       }
     },
     mutations: {

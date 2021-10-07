@@ -53,12 +53,13 @@ module "lambda_clipboard_onconnect" {
   source_path = "./lambda_clipboard_onconnect"
   publish = true
   attach_policy = true
-  policy = "arn:aws:iam::aws:policy/AdministratorAccess"
+  # policy = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy = aws_iam_policy.lambda_websocket.arn
   cloudwatch_logs_retention_in_days = 7
   allowed_triggers = {
     AllowExecutionFromAPIGateway = {
       service    = "apigateway"
-      source_arn = "arn:aws:execute-api:us-east-1:548266769309:*"
+      source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:*"
     }
   } 
 }
@@ -75,12 +76,12 @@ module "lambda_clipboard_disconnect" {
   source_path = "./lambda_clipboard_disconnect"
   publish = true
   attach_policy = true
-  policy = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy = aws_iam_policy.lambda_websocket.arn
   cloudwatch_logs_retention_in_days = 7
   allowed_triggers = {
     AllowExecutionFromAPIGateway = {
       service    = "apigateway"
-      source_arn = "arn:aws:execute-api:us-east-1:548266769309:*"
+      source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:*"
     }
   }
 }
@@ -97,12 +98,13 @@ module "lambda_clipboard_sendmessage" {
   source_path = "./lambda_clipboard_sendmessage"
   publish = true
   attach_policy = true
-  policy = "arn:aws:iam::aws:policy/AdministratorAccess"
+  # policy = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy = aws_iam_policy.lambda_websocket.arn
   cloudwatch_logs_retention_in_days = 7
   allowed_triggers = {
     AllowExecutionFromAPIGateway = {
       service    = "apigateway"
-      source_arn = "arn:aws:execute-api:us-east-1:548266769309:*"
+      source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:*"
     }
   }
 }

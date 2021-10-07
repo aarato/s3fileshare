@@ -25,5 +25,11 @@ resource "aws_cognito_identity_pool" "id_pool" {
     provider_name           = aws_cognito_user_pool.pool.endpoint   # "cognito-idp.us-east-1.amazonaws.com/us-east-1_Tv0493apJ"
     server_side_token_check = false
   }
+}
 
+resource "aws_cognito_identity_pool_roles_attachment" "roleattach1" {
+  identity_pool_id = aws_cognito_identity_pool.id_pool.id
+  roles = {
+    "authenticated" = aws_iam_role.cognito_authenticated.arn
+  }
 }

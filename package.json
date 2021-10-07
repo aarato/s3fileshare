@@ -12,6 +12,7 @@
     "@aws-sdk/client-cognito-identity": "^3.33.0",
     "@aws-sdk/client-s3": "^3.33.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.33.0",
+    "@aws-sdk/lib-storage": "^3.34.0",
     "@aws-sdk/s3-request-presigner": "^3.33.0",
     "@popperjs/core": "^2.9.2",
     "amazon-cognito-identity-js": "^5.1.1",

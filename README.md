@@ -41,10 +41,7 @@ https://s3.[REGION].amazonaws.com/[NAME]/index.html"
 # Directory Layout
 ```text
 .
-├── dist                -> Production build web front-end copied to S3 bucket
-├── public              -> Static files for the web front-end
-├── src                 -> Vue.js folder for web front-end JavaScript source code
-└── terraform           -> Terraform folder
+├── terraform           -> Terraform folder
 │   ├── main.tf         -> Terraform AWS provider and data definitions
 │   ├── variables.tf    -> Terraform Input variables
 │   ├── output.tf       -> Terraform Output variables for Website and WebSocket URLs
@@ -55,14 +52,33 @@ https://s3.[REGION].amazonaws.com/[NAME]/index.html"
 │   ├── iam.tf          -> Terraform IAM resources (roles & policies)
 │   ├── lambda.tf       -> Terraform Lambda resources (roles & policies)
 │   ├── s3.tf           -> Terraform S3 resources for the web front-end
-│   ├── lambda_clipboard_connect        
-│       ├── index.js                    -> Node.js back-end code handling WebSocket connect
-│   ├── lambda_clipboard_disconnect     
-│       ├── index.js                    -> Node.js back-end code handling WebSocket disconnect
-│   ├── lambda_clipboard_sendmessage    
-│       ├── index.js                    -> Node.js back-end code replicating clipboard realtime changes to all connected clients
-│   ├── lambda_create_cognito_user      
-│       ├── index.py                    -> Python back-end code that creates the admin user and resets the password
-│   ├── template                        
-│       ├── awsconfig.json              -> Terraform JSON template to provide AWS resource IDs for the web front-end
+│   └── lambda_clipboard_connect        
+│       └── index.js                    -> Node.js back-end code handling WebSocket connect
+│   └── lambda_clipboard_disconnect     
+│       └── index.js                    -> Node.js back-end code handling WebSocket disconnect
+│   └── lambda_clipboard_sendmessage    
+│       └── index.js                    -> Node.js back-end code replicating clipboard realtime changes to all connected clients
+│   └── lambda_create_cognito_user      
+│       └── index.py                    -> Python back-end code that creates the admin user and resets the password
+│   └── template                        
+│       └── awsconfig.json              -> Terraform JSON template to provide AWS resource IDs for the web front-end
+│
+├── dist                -> Production front-end to S3 bucket (by 'npm build')
+├── public              -> Static files for the web front-end
+├── src                 -> Vue.js folder
+│   ├── main.js         -> Starting point
+│   ├── App.js          -> Vue root
+│   ├── store.js        -> Vuex store
+│   └── components      -> Vue.js components
+│       ├── helpers.js      -> JavaScript helper functions
+│       ├── Header.js       -> Header for login and status
+│       ├── S3Files.js      -> Main Body for sub-components
+│       ├── Navbar.js       -> Navigation bar sub-components
+│       ├── Download.js     -> Download sub-components
+│       ├── Upload.js       -> Upload sub-components
+│       ├── Clipboard.js    -> Clipboard sub-components
+│       ├── InpoutForm.js   -> Reusable components for inputs
+│       ├── ModalMessage.js -> Reusable components for Modal Messages
+│       └── ToastMessage.js -> Reusable components for Toast Messages
+│
 └── README.md           -> This readme file

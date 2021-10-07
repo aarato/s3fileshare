@@ -1,51 +1,49 @@
 <template>
-  <div  id="right-main-column" class="d-flex flex-column flex-grow-1 overflow-auto">
-    <NavBar/>
-    <Upload v-if="$store.state.visible.navUpload"/>
-    <Download v-if="$store.state.visible.navDownload"/> 
-    <Clipboard v-if="$store.state.visible.navClipboard"/>
-    <ModalMessage :title="modalTitle" :message="modalMessage">
+  <div class="d-flex flex-column">
+    <div v-if="uploadOngoing" class="d-flex justify-content-center">
+      <div>
+        <span class="h3"> Uploading: {{$store.state.uploadPercent}}% Complete</span>
+      </div>
+    </div>
+    <div v-if="uploadOngoing" class="progress">
+      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" :aria-valuenow="$store.state.uploadPercent" aria-valuemin="0" aria-valuemax="100" :style="'width: '+$store.state.uploadPercent+'%'">{{$store.state.uploadPercent}}%</div>
+    </div>
+    <InputForm v-if="$store.state.credentials && !uploadOngoing" :name="$store.state.inputS3Upload.name" class="border border-2 rounded-3 p-2 d-flex overflow-auto">
       <template v-slot:footer>
-        <button type="button" class="btn btn-danger" @click="deleteMultipartUploads">Delete</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </template>
-    </ModalMessage>      
-  </div>
+        <!-- <button class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#clipboardModal">Clipboard</button>        
+        <button class="btn btn-primary me-1" @click='listObjects()'>Refresh</button> -->
+        <button class="btn btn-primary" @click='uploadMulti()'><span v-if='uploadOngoing' class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Upload</button>
+      </template>      
+    </InputForm>
+  </div> 
 </template>
 
 <script>
-import ModalMessage from './ModalMessage.vue'
-import NavBar from './NavBar.vue'
-import Clipboard from './Clipboard.vue'
-import Download from './Download.vue'
-import Upload from './Upload.vue'
-import { S3Client, AbortMultipartUploadCommand, UploadPartCommand, ListMultipartUploadsCommand, ListPartsCommand , GetObjectCommand, PutObjectCommand, DeleteObjectCommand   } from "@aws-sdk/client-s3";
+import InputForm from './InputForm.vue'
+import { S3Client, UploadPartCommand, ListMultipartUploadsCommand, ListPartsCommand , ListObjectsCommand, GetObjectCommand, PutObjectCommand, DeleteObjectCommand   } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Upload as UploadMulti } from "@aws-sdk/lib-storage";
+import { add } from 'date-fns'
 import { Toast } from "bootstrap" ;
 import { saveAs } from 'file-saver';
-import { Modal } from 'bootstrap';
 
 export default {
-  name: 'S3Files',
+  name: 'Upload',
   components: {
-    ModalMessage,NavBar,Clipboard,Download,Upload
+    InputForm
   },
   props: {
     name: {
           type: String,
-          default: "S3Files"
+          default: "Upload"
         }  
   },
   data: function (){
     return {
       search: "",
       // buckets: [{Key: 1},{Key: 2},{Key: 3}]
-      myModal: null,
       buckets: [],
       uploadOngoing: false,
-      modalTitle: "Init Title...",
-      modalMessage: "Init Message...",
     }
   },
   computed:{
@@ -56,39 +54,6 @@ export default {
   methods: {
     test: function(){
       console.log("test")
-    },
-    checkExistingMultipartUploads: async function (){
-      let uploadsInProgress = await this.listMultipart()
-      const existingUploads = []
-      if (uploadsInProgress?.length > 0){
-        for (let index = 0; index < uploadsInProgress.length; index++) {
-          const file = uploadsInProgress[index];
-          const multipartUpload = await this.listMultipartKey(file.Key, file.UploadId)
-          existingUploads.push(file.Key )
-          console.log("Existing multi-part upload in progress found:",multipartUpload.Key)
-        }
-      }
-      return existingUploads
-    },
-    deleteMultipartUploads: async function (){
-      let uploadsInProgress = await this.listMultipart()
-      if (uploadsInProgress?.length > 0){
-        const s3Client = new S3Client({
-          region: this.$store.state.region,
-          credentials: this.$store.state.credentials
-        });        
-        for (let index = 0; index < uploadsInProgress.length; index++) {
-          const file = uploadsInProgress[index]
-          console.log("Delete Progress:",file.Key)
-          let params = { Bucket:  this.$store.state.bucket, Key: file.Key  ,UploadId: file.UploadId}
-          try {
-            await s3Client.send( new AbortMultipartUploadCommand( params) );
-          } catch (error) {
-            console.log("Multipart delete failed!\n", error)
-          }
-        }
-      }
-      this.myModal.hide();   
     },
     GetSignedUrl: async function (key){
       const s3Client = new S3Client({
@@ -300,6 +265,7 @@ export default {
       // let uploadId = upload.UploadId
       let command2 = new ListPartsCommand({ Bucket:  this.$store.state.bucket, Key: Key, UploadId: UploadId});
       const response = await s3Client.send(command2);
+      console.log(response)
       return response
 
       // .then((result) =>{
@@ -368,18 +334,41 @@ export default {
       }
 
     },    
+    listObjects: async function(){
+      let bsAlert = new Toast( document.getElementById('liveToast') );  
+      const s3Client = new S3Client({
+          region: this.$store.state.region,
+          credentials: this.$store.state.credentials
+        });
+      let command = new ListObjectsCommand({ Bucket:  this.$store.state.bucket, Prefix: "files"});
+      return s3Client.send(command)
+      .then((result) =>{
+        if ( ! result.Contents ) {
+          this.buckets = []
+          return ;
+        }
+        this.buckets = result.Contents       
+        for (let index = 0; index < this.buckets.length; index++) {
+          let expireDate = add(this.buckets[index].LastModified, {days: 2})
+          expireDate.setUTCHours(0, 0, 0, 0)
+          this.buckets[index].expireDate = expireDate
+        }
+        // console.log("Success",this.buckets)
+      })
+      .catch((result) =>{
+        this.$store.state.toastMessage = `S3 folder refresh failed!`
+        bsAlert.show();
+        this.$store.commit("setOutput", {name: "output", text: JSON.stringify(result.message, null, 2)} )
+        console.log("Error",result)
+      })
+    },
+
   },
   mounted: async function () {
-    console.log("Mounted:", this.name)
-    let uploads = await this.checkExistingMultipartUploads()
-    if ( uploads.length > 0 ) {
-      this.modalTitle = "Existing multi-part upload parts found!"
-      this.modalMessage = uploads.join("\n")
-      this.myModal = new Modal(document.getElementById('exampleModal'));
-      this.myModal.show();
-    }
-  }
+    console.log("Mounted:", this.name)  
+  }  
 }
+
 
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
