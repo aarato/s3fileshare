@@ -15,6 +15,7 @@ data "template_file" "aws_config" {
     userPoolId     = aws_cognito_user_pool.pool.id
     clientId       = aws_cognito_user_pool_client.client.id
     identityPoolId = aws_cognito_identity_pool.id_pool.id
+    websocket_api  = "aws_apigatewayv2_stage.stage_prod.invoke_url"
 
   }
 }
