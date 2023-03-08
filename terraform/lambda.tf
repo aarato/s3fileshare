@@ -35,7 +35,7 @@ module "lambda_create_cognito_user" {
 
 }
 
-
+ 
 
 ###
 ### WebSocket Lambda Functions
