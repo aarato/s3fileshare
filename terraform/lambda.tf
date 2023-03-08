@@ -48,7 +48,7 @@ module "lambda_clipboard_onconnect" {
   function_name = "${var.name}_clipboard_onconnect"
   description   = "clipboard_onconnect"
   handler       = "index.lambda_handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   environment_variables = tomap({"TABLE_NAME" = module.dynamodb_table.dynamodb_table_id})
   source_path = "./lambda_clipboard_onconnect"
   publish = true
@@ -71,7 +71,7 @@ module "lambda_clipboard_disconnect" {
   function_name = "${var.name}_clipboard_disconnect"
   description   = "clipboard_disconnect"
   handler       = "index.lambda_handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   environment_variables = tomap({"TABLE_NAME" = module.dynamodb_table.dynamodb_table_id})
   source_path = "./lambda_clipboard_disconnect"
   publish = true
@@ -93,7 +93,7 @@ module "lambda_clipboard_sendmessage" {
   function_name = "${var.name}_clipboard_sendmessage"
   description   = "clipboard_sendmessage"
   handler       = "index.lambda_handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   environment_variables = tomap({"TABLE_NAME" = module.dynamodb_table.dynamodb_table_id})
   source_path = "./lambda_clipboard_sendmessage"
   publish = true
