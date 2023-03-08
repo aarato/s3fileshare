@@ -32,7 +32,6 @@ module "lambda_create_cognito_user" {
     aws_cognito_user_pool.pool,
     aws_cloudwatch_log_group.lambda_create_cognito_user
   ]
-
 }
 
  
