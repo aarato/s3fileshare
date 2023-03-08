@@ -42,7 +42,7 @@ module "lambda_create_cognito_user" {
 
 module "lambda_clipboard_onconnect" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.16"
+  version = "~> 4.10"
 
   function_name = "${var.name}_clipboard_onconnect"
   description   = "clipboard_onconnect"
