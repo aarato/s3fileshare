@@ -42,12 +42,12 @@ module "lambda_create_cognito_user" {
 
 module "lambda_clipboard_onconnect" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.10"
+  version = "~> 4.15"
 
   function_name = "${var.name}_clipboard_onconnect"
   description   = "clipboard_onconnect"
   handler       = "index.lambda_handler"
-  runtime       = "nodejs16"
+  runtime       = "nodejs16.x"
   environment_variables = tomap({"TABLE_NAME" = module.dynamodb_table.dynamodb_table_id})
   source_path = "./lambda_clipboard_onconnect"
   publish = true
