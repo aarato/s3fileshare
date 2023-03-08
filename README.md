@@ -1,4 +1,5 @@
 # Introduction
+
 Share files and clipboard content real-time, securely and privately using your own AWS account. This repository includes everything to create an AWS "serverless" environment using Terraform's infrastructure as code (IaC) tool.
 ### Benefits & Features
 - The entire AWS environment can be created, and if needed destroyed, with the provided Terraform code in a matter of minutes.
