@@ -1,6 +1,8 @@
 provider "aws" {
   region = var.region
   # version = "~> 2.3"
+  source  = "hashicorp/aws"
+  version = "~> 3.29.1"  
 }
 
 # Used as data.aws_caller_identity.current.account_id
