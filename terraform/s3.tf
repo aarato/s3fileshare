@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "account" {
   }
 }
 
-resource "aws_s3_bucket_object" "awsconfig" {
+resource "aws_s3_object" "awsconfig" {
   bucket = aws_s3_bucket.account.id
   key    = "awsconfig.json"
   content = data.template_file.aws_config.rendered
@@ -29,7 +29,7 @@ resource "aws_s3_bucket_object" "awsconfig" {
   # etag = filemd5(data.template_file.aws_config)
 }
 
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_object" "index" {
   bucket = aws_s3_bucket.account.id
   key    = "index.html"
   source = "../dist/index.html"
@@ -38,7 +38,7 @@ resource "aws_s3_bucket_object" "index" {
   etag = filemd5("../dist/index.html")
 }
 
-resource "aws_s3_bucket_object" "favicon" {
+resource "aws_s3_object" "favicon" {
   bucket = aws_s3_bucket.account.id
   key    = "favicon.ico"
   source = "../dist/favicon.ico"
@@ -47,7 +47,7 @@ resource "aws_s3_bucket_object" "favicon" {
   etag = filemd5("../dist/favicon.ico")
 }
 
-resource "aws_s3_bucket_object" "css" {
+resource "aws_s3_object" "css" {
   for_each = fileset("../dist/css", "*")
   source = "../dist/css/${each.value}"
   acl = "public-read"
@@ -57,7 +57,7 @@ resource "aws_s3_bucket_object" "css" {
   key    = "css/${each.value}"
 }
 
-resource "aws_s3_bucket_object" "js" {
+resource "aws_s3_object" "js" {
   for_each = fileset("../dist/", "js/*")
   source = "../dist/${each.value}"
   acl = "public-read"
