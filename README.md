@@ -37,6 +37,12 @@ https://s3.[REGION].amazonaws.com/[NAME]/index.html"
 ```
 - terraform destroy
 ```
+# Password Change
+Currently only the admin user is supported with an initial password provided at setup time. The admin password can be changed using AWS CLI. Example:
+```
+# aws cognito-idp admin-set-user-password --user-pool-id "<USER-POOL-ID>"  --username "admin" --password "<NEW-COMPLEX-PASSWORD>" --permanent
+aws cognito-idp admin-set-user-password --user-pool-id "us-east-1_7GZQCV8KY"  --username "admin" --password "MyP@ssword1shere!" --permanent
+```
 
 # Directory Layout
 ```text
