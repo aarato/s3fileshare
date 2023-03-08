@@ -16,7 +16,7 @@ JSON
 
 module "lambda_create_cognito_user" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.0"
+  version = "~> 4.15"
 
   function_name = "${var.name}_lambda_create_cognito_user"
   description   = "lambda_create_cognito_user"
@@ -43,7 +43,7 @@ module "lambda_create_cognito_user" {
 
 module "lambda_clipboard_onconnect" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.36"
+  version = "~> 4.15"
 
   function_name = "${var.name}_clipboard_onconnect"
   description   = "clipboard_onconnect"
@@ -66,7 +66,7 @@ module "lambda_clipboard_onconnect" {
 
 module "lambda_clipboard_disconnect" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.36"
+  version = "~> 4.15"
 
   function_name = "${var.name}_clipboard_disconnect"
   description   = "clipboard_disconnect"
@@ -88,7 +88,7 @@ module "lambda_clipboard_disconnect" {
 
 module "lambda_clipboard_sendmessage" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.36"
+  version = "~> 4.15"
 
   function_name = "${var.name}_clipboard_sendmessage"
   description   = "clipboard_sendmessage"
