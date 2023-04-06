@@ -3,13 +3,7 @@ resource "aws_s3_bucket" "account" {
   bucket = var.name
   acl    = "private"
   force_destroy = true
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET","PUT","DELETE","HEAD", "POST"]
-    allowed_origins = ["*"]
-    expose_headers  = ["ETag"]
-    max_age_seconds = 3000
-  }  
+
   lifecycle_rule {
     id      = "files"
     enabled = true
@@ -17,6 +11,18 @@ resource "aws_s3_bucket" "account" {
     expiration {
       days = 1
     }
+  }
+}
+
+resource "aws_s3_bucket_cors_configuration" "example" {
+  bucket = var.name
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET","PUT","DELETE","HEAD", "POST"]
+    allowed_origins = ["*"] // allowed_origins = ["https://s3-website-test.hashicorp.com"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
   }
 }
 
