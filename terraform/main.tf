@@ -46,3 +46,9 @@ data "template_file" "aws_config" {
 #   }
 # }
 
+terraform {
+  required_providers {
+    local = {
+      version = "~> 2.1"
+    }
+  }
