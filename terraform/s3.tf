@@ -3,14 +3,6 @@ resource "aws_s3_bucket" "account" {
   bucket = var.name
   force_destroy = true
 
-  # lifecycle_rule {
-  #   id      = "files"
-  #   enabled = true
-  #   prefix = "files/"
-  #   expiration {
-  #     days = 1
-  #   }
-  # }
 }
 
 resource "aws_s3_bucket_acl" "this" {
