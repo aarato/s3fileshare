@@ -4,17 +4,30 @@ resource "aws_s3_bucket" "account" {
   acl    = "private"
   force_destroy = true
 
+  # lifecycle_rule {
+  #   id      = "files"
+  #   enabled = true
+  #   prefix = "files/"
+  #   expiration {
+  #     days = 1
+  #   }
+  # }
+}
+resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  bucket = var.name
+
   lifecycle_rule {
     id      = "files"
-    enabled = true
+    status = "Enabled"
     prefix = "files/"
     expiration {
       days = 1
     }
   }
+  
 }
 
-resource "aws_s3_bucket_cors_configuration" "example" {
+resource "aws_s3_bucket_cors_configuration" "this" {
   bucket = var.name
 
   cors_rule {
