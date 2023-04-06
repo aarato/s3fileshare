@@ -2,17 +2,17 @@
 ### CREATE ADMIN COGNITO USER
 ###
 
-data "aws_lambda_invocation" "create_admin" {
-  function_name = module.lambda_create_cognito_user.lambda_function_name
+# data "aws_lambda_invocation" "create_admin" {
+#   function_name = module.lambda_create_cognito_user.lambda_function_name
 
-  input = <<JSON
-{
-  "userpoolid": "${aws_cognito_user_pool.pool.id}",
-  "username": "admin",
-  "password": "${var.password}"
-}
-JSON
-}
+#   input = <<JSON
+# {
+#   "userpoolid": "${aws_cognito_user_pool.pool.id}",
+#   "username": "admin",
+#   "password": "${var.password}"
+# }
+# JSON
+# }
 
 # module "lambda_create_cognito_user" {
 #   source  = "terraform-aws-modules/lambda/aws"
