@@ -1,7 +1,6 @@
 
 resource "aws_s3_bucket" "account" {
   bucket = var.name
-  acl    = "private"
   force_destroy = true
 
   # lifecycle_rule {
@@ -13,18 +12,23 @@ resource "aws_s3_bucket" "account" {
   #   }
   # }
 }
+
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.account.id
+  acl    = "private"
+}
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
   bucket = var.name
-
-  lifecycle_rule {
+  rule {
     id      = "files"
-    status = "Enabled"
-    prefix = "files/"
+    filter {
+      prefix = "files/"
+    }    
     expiration {
       days = 1
     }
+    status = "Enabled"
   }
-  
 }
 
 resource "aws_s3_bucket_cors_configuration" "this" {
