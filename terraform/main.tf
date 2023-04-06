@@ -4,6 +4,9 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.16"
     }
+    local = {
+      version = "~> 2.1"
+    }    
   }
 
   required_version = ">= 1.2.0"
@@ -45,11 +48,3 @@ data "template_file" "aws_config" {
 #     websocket_api  = aws_apigatewayv2_stage.stage_prod.invoke_url
 #   }
 # }
-
-terraform {
-  required_providers {
-    local = {
-      version = "~> 2.1"
-    }
-  }
-}
