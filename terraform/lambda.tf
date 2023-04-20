@@ -171,4 +171,5 @@ resource "aws_iam_role" "function_role" {
         }
       ]
     })
+  }
 }
