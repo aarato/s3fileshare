@@ -168,7 +168,7 @@ resource "aws_iam_role" "function_role" {
             ],
             "Effect": "Allow",
             "Resource": [
-                "arn:aws:logs:*"
+                "arn:aws:logs:*:*:*:*:*"
             ],
             "Sid": ""
         }
