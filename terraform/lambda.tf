@@ -110,17 +110,18 @@ module "lambda_clipboard_sendmessage" {
 
 
 locals {
-  function_name               = "${lower(var.app_name)}-${lower(var.app_environment)}-function1"
+  function_name               = "${lower(var.name)}-${lower(var.app_environment)}-create_cognito_user"
   function_handler            = "index.lambda_handler"
   function_runtime            = "python3.9"
-  function_source_dir = "${path.module}/aws_lambda_functions/function1"
-  function_zip_file   = "${path.module}/aws_lambda_functions/${local.function_name}.zip"
+  function_source_dir         = "${path.module}/aws_lambda_functions/create_cognito_user"
+  function_zip_file           = "${path.module}/aws_lambda_functions/${local.function_name}.zip"
   function_timeout_in_seconds = 5
 }
 
 
 resource "aws_lambda_function" "function" {
   function_name = local.function_name
+  description = local.function_name
   handler       = "index.lambda_handler"
   runtime       = "python3.9"
   timeout       = 5
