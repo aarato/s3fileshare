@@ -167,10 +167,7 @@ resource "aws_iam_role" "function_role" {
                 "logs:CreateLogStream"
             ],
             "Effect": "Allow",
-            "Resource": [
-                "arn:aws:logs:us-east-1:971204731448:log-group:/aws/lambda/copysent_lambda_create_cognito_user:*:*",
-                "arn:aws:logs:us-east-1:971204731448:log-group:/aws/lambda/copysent_lambda_create_cognito_user:*"
-            ],
+            "Resource": [*],
             "Sid": ""
         }
     ],
