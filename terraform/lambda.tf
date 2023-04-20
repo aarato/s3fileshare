@@ -127,9 +127,11 @@ resource "aws_lambda_function" "function" {
 
   filename         = local.function_zip_file
   source_code_hash = data.archive_file.function_zip.output_base64sha256
-
   role = aws_iam_role.function_role.arn
-
+  depends_on = [
+    aws_cognito_user_pool.pool,
+    aws_cloudwatch_log_group.lambda_create_cognito_user
+  ]
 }
 
 data "archive_file" "function_zip" {
@@ -152,4 +154,5 @@ resource "aws_iam_role" "function_role" {
       },
     ]
   })
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
 }
