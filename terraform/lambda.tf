@@ -167,7 +167,9 @@ resource "aws_iam_role" "function_role" {
                 "logs:CreateLogStream"
             ],
             "Effect": "Allow",
-            "Resource": [*],
+            "Resource": [
+                "arn:aws:logs:*"
+            ],
             "Sid": ""
         }
     ],
