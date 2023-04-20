@@ -156,25 +156,19 @@ resource "aws_iam_role" "function_role" {
   })
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
   inline_policy {
-    name = "${local.function_name}-user-logs"
-    policy = <<EOF
-{
-    "Version": "2012-10-17"
-    "Statement": [
+    name = "lambda-logs-policy"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
         {
-            "Action": [
-                "logs:PutLogEvents",
-                "logs:CreateLogStream"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-                "arn:aws:logs:*:*:*:*:*"
-            ],
-            "Sid": ""
+          Effect   = "Allow"
+          Action   = [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ]
+          Resource = "arn:aws:logs:*:*:*"
         }
-    ],
-    
-}
-EOF
-  }
+      ]
+    })
 }
