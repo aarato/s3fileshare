@@ -4,7 +4,7 @@
 
 data "aws_lambda_invocation" "create_admin" {
   # function_name = module.lambda_create_cognito_user.lambda_function_name
-  function_name = resource.aws_lambda_function.function
+  function_name = aws_lambda_function.function.function_name
 
   input = <<JSON
 {
