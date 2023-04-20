@@ -15,27 +15,6 @@ data "aws_lambda_invocation" "create_admin" {
 JSON
 }
 
-module "lambda_create_cognito_user" {
-  source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.10"
-
-  function_name = "${var.name}_lambda_create_cognito_user"
-  description   = "lambda_create_cognito_user"
-  handler       = "index.lambda_handler"
-  runtime       = "python3.8"
-  use_existing_cloudwatch_log_group = true
-  source_path = "./lambda_create_cognito_user"
-  cloudwatch_logs_retention_in_days = 7
-  publish = true
-  attach_policy = true
-  policy = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
-  depends_on = [
-    aws_cognito_user_pool.pool,
-    aws_cloudwatch_log_group.lambda_create_cognito_user
-  ]
-}
-
- 
 
 ###
 ### WebSocket Lambda Functions
@@ -116,6 +95,9 @@ locals {
   create_cognito_user_zip_file           = "${path.module}/aws_lambda_functions/${local.create_cognito_user_name}.zip"
 }
 
+###
+### create_cognito_user
+###
 
 resource "aws_lambda_function" "create_cognito_user" {
   function_name = local.create_cognito_user_name
@@ -127,6 +109,7 @@ resource "aws_lambda_function" "create_cognito_user" {
   filename         = local.create_cognito_user_zip_file
   source_code_hash = data.archive_file.create_cognito_user.output_base64sha256
   role = aws_iam_role.create_cognito_user.arn
+  cloudwatch_log_group_name = aws_cloudwatch_log_group.create_cognito_user.name
   depends_on = [
     aws_cognito_user_pool.pool,
     aws_cloudwatch_log_group.lambda_create_cognito_user
@@ -171,4 +154,9 @@ resource "aws_iam_role" "create_cognito_user" {
       ]
     })
   }
+}
+
+resource "aws_cloudwatch_log_group" "create_cognito_user" {
+  name = "/aws/lambda/${local.create_cognito_user_name}"
+  retention_in_days = 7
 }
