@@ -109,7 +109,8 @@ resource "aws_lambda_function" "create_cognito_user" {
   filename         = local.create_cognito_user_zip_file
   source_code_hash = data.archive_file.create_cognito_user.output_base64sha256
   role = aws_iam_role.create_cognito_user.arn
-  cloudwatch_log_group_name = aws_cloudwatch_log_group.create_cognito_user.name
+  cloudwatch_log_group_arn = aws_cloudwatch_log_group.create_cognito_user.arn
+  
   depends_on = [
     aws_cognito_user_pool.pool,
     aws_cloudwatch_log_group.lambda_create_cognito_user
