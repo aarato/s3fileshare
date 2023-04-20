@@ -113,7 +113,7 @@ module "lambda_clipboard_sendmessage" {
 locals {
   create_cognito_user_name               = "${lower(var.name)}-${lower(var.app_environment)}-create_cognito_user"
   create_cognito_user_source_dir         = "${path.module}/aws_lambda_functions/create_cognito_user"
-  create_cognito_user_zip_file           = "${path.module}/aws_lambda_functions/${local.function_name}.zip"
+  create_cognito_user_zip_file           = "${path.module}/aws_lambda_functions/${local.create_cognito_user_name}.zip"
 }
 
 
