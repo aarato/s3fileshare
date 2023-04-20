@@ -155,4 +155,27 @@ resource "aws_iam_role" "function_role" {
     ]
   })
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
+  inline_policy {
+    name = "${local.function_name}-user-logs"
+    policy = <<EOF
+{
+    "Version": "2012-10-17"
+    "Statement": [
+        {
+            "Action": [
+                "logs:PutLogEvents",
+                "logs:CreateLogStream"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:logs:us-east-1:971204731448:log-group:/aws/lambda/copysent_lambda_create_cognito_user:*:*",
+                "arn:aws:logs:us-east-1:971204731448:log-group:/aws/lambda/copysent_lambda_create_cognito_user:*"
+            ],
+            "Sid": ""
+        }
+    ],
+    
+}
+EOF
+  }
 }
