@@ -39,7 +39,6 @@ resource "aws_iam_role" "clipboard_onconnect" {
       },
     ]
   })
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
   inline_policy {
     name = "lambda-logs-policy"
     policy = jsonencode({
@@ -57,6 +56,11 @@ resource "aws_iam_role" "clipboard_onconnect" {
       ]
     })
   }
+}
+
+resource "aws_iam_role_policy_attachment" "clipboard_onconnect" {
+  role       = aws_iam_role.clipboard_onconnect.name
+  policy_arn = aws_iam_policy.lambda_websocket.arn
 }
 
 resource "aws_cloudwatch_log_group" "clipboard_onconnect" {
