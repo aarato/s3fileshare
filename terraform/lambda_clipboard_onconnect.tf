@@ -25,6 +25,15 @@ data "archive_file" "clipboard_onconnect" {
   output_path = local.clipboard_onconnect_zip_file
 }
 
+resource "aws_lambda_permission" "clipboard_onconnect" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.clipboard_onconnect.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.clipboard.execution_arn}/*/*"
+}
+
+
 resource "aws_iam_role" "clipboard_onconnect" {
   name = "${local.clipboard_onconnect_name}-role"
 
