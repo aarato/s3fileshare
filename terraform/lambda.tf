@@ -89,14 +89,6 @@ module "lambda_clipboard_sendmessage" {
 }
 
 
-locals {
-  create_cognito_user_name               = "${lower(var.name)}-${lower(var.app_environment)}-create_cognito_user"
-  create_cognito_user_source_dir         = "${path.module}/aws_lambda_functions/create_cognito_user"
-  create_cognito_user_zip_file           = "${path.module}/aws_lambda_functions/${local.create_cognito_user_name}.zip"
-  clipboard_onconnect_name               = "${lower(var.name)}-${lower(var.app_environment)}-clipboard_onconnect"
-  clipboard_onconnect_source_dir         = "${path.module}/aws_lambda_functions/clipboard_onconnect"
-  clipboard_onconnect_zip_file           = "${path.module}/aws_lambda_functions/${local.clipboard_onconnect_name}.zip"
-}
 
 ###
 ### create_cognito_user
