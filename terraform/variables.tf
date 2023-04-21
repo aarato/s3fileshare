@@ -41,4 +41,7 @@ locals {
   clipboard_onconnect_name               = "${lower(var.name)}-${lower(var.app_environment)}-clipboard_onconnect"
   clipboard_onconnect_source_dir         = "${path.module}/aws_lambda_functions/clipboard_onconnect"
   clipboard_onconnect_zip_file           = "${path.module}/aws_lambda_functions/${local.clipboard_onconnect_name}.zip"
+  clipboard_disconnect_name               = "${lower(var.name)}-${lower(var.app_environment)}-clipboard_disconnect"
+  clipboard_disconnect_source_dir         = "${path.module}/aws_lambda_functions/clipboard_disconnect"
+  clipboard_disconnect_zip_file           = "${path.module}/aws_lambda_functions/${local.clipboard_disconnect_name}.zip"
 }
