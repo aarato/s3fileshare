@@ -11,7 +11,7 @@ resource "aws_lambda_function" "clipboard_onconnect" {
 
   filename         = local.clipboard_onconnect_zip_file
   source_code_hash = data.archive_file.clipboard_onconnect.output_base64sha256
-  role = aws_iam_role.lambda_websocket.arn
+  role = aws_iam_role.clipboard_onconnect.arn
 
   depends_on = [
     aws_cognito_user_pool.pool,
