@@ -63,7 +63,7 @@ resource "aws_apigatewayv2_integration" "clipboard_sendmessage" {
   content_handling_strategy = "CONVERT_TO_TEXT"
   description               = "clipboard_sendmessage"
   integration_method        = "POST"
-  integration_uri           = module.lambda_clipboard_sendmessage.lambda_function_invoke_arn
+  integration_uri           = aws_lambda_function.clipboard_sendmessage.invoke_arn
   passthrough_behavior      = "WHEN_NO_MATCH"
 }
 

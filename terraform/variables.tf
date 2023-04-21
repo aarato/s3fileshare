@@ -44,4 +44,7 @@ locals {
   clipboard_disconnect_name               = "${lower(var.name)}-${lower(var.app_environment)}-clipboard_disconnect"
   clipboard_disconnect_source_dir         = "${path.module}/aws_lambda_functions/clipboard_disconnect"
   clipboard_disconnect_zip_file           = "${path.module}/aws_lambda_functions/${local.clipboard_disconnect_name}.zip"
+  clipboard_sendmessage_name               = "${lower(var.name)}-${lower(var.app_environment)}-clipboard_sendmessage"
+  clipboard_sendmessage_source_dir         = "${path.module}/aws_lambda_functions/clipboard_sendmessage"
+  clipboard_sendmessage_zip_file           = "${path.module}/aws_lambda_functions/${local.clipboard_sendmessage_name}.zip"
 }
