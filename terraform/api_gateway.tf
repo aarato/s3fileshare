@@ -52,7 +52,7 @@ resource "aws_apigatewayv2_integration" "clipboard_disconnect" {
   content_handling_strategy = "CONVERT_TO_TEXT"
   description               = "clipboard_disconnect"
   integration_method        = "POST"
-  integration_uri           = module.lambda_clipboard_disconnect.lambda_function_invoke_arn
+  integration_uri           = aws_lambda_function.clipboard_disconnect.invoke_arn
   passthrough_behavior      = "WHEN_NO_MATCH"
 }
 resource "aws_apigatewayv2_integration" "clipboard_sendmessage" {
