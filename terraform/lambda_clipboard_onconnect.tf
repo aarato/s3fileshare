@@ -13,6 +13,12 @@ resource "aws_lambda_function" "clipboard_onconnect" {
   source_code_hash = data.archive_file.clipboard_onconnect.output_base64sha256
   role = aws_iam_role.clipboard_onconnect.arn
 
+  environment {
+    variables = {
+      TABLE_NAME = module.dynamodb_table.dynamodb_table_id
+    }
+  }
+
   depends_on = [
     aws_cognito_user_pool.pool,
     aws_cloudwatch_log_group.clipboard_onconnect
