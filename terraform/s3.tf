@@ -1,22 +1,37 @@
 
 resource "aws_s3_bucket" "account" {
   bucket = var.name
-  acl    = "private"
   force_destroy = true
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET","PUT","DELETE","HEAD", "POST"]
-    allowed_origins = ["*"]
-    expose_headers  = ["ETag"]
-    max_age_seconds = 3000
-  }  
-  lifecycle_rule {
+
+}
+
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.account.id
+  acl    = "private"
+}
+resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  bucket = var.name
+  rule {
     id      = "files"
-    enabled = true
-    prefix = "files/"
+    filter {
+      prefix = "files/"
+    }    
     expiration {
       days = 1
     }
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_cors_configuration" "this" {
+  bucket = var.name
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET","PUT","DELETE","HEAD", "POST"]
+    allowed_origins = ["*"] // allowed_origins = ["https://s3-website-test.hashicorp.com"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
   }
 }
 
@@ -48,41 +63,21 @@ resource "aws_s3_object" "favicon" {
 }
 
 resource "aws_s3_object" "css" {
-  for_each = fileset("../dist/assets", "*.css")
-  source = "../dist/assets/${each.value}"
+  for_each = fileset("../dist/css", "*")
+  source = "../dist/css/${each.value}"
   acl = "public-read"
   content_type = "text/css"
-  etag   = filemd5("../dist/assets/${each.value}")
+  etag   = filemd5("../dist/css/${each.value}")
   bucket = aws_s3_bucket.account.id
-  key    = "assets/${each.value}"
+  key    = "css/${each.value}"
 }
 
 resource "aws_s3_object" "js" {
-  for_each = fileset("../dist/assets", "*.js")
-  source = "../dist/assets/${each.value}"
+  for_each = fileset("../dist/", "js/*")
+  source = "../dist/${each.value}"
   acl = "public-read"
   content_type = "text/javascript"
-  etag   = filemd5("../dist/assets/${each.value}")
+  etag   = filemd5("../dist/${each.value}")
   bucket = aws_s3_bucket.account.id
-  key    = "assets/${each.value}"
-}
-
-resource "aws_s3_object" "woff" {
-  for_each = fileset("../dist/assets", "*.woff")
-  source = "../dist/assets/${each.value}"
-  acl = "public-read"
-  content_type = "font/woff"
-  etag   = filemd5("../dist/assets/${each.value}")
-  bucket = aws_s3_bucket.account.id
-  key    = "assets/${each.value}"
-}
-
-resource "aws_s3_object" "woff2" {
-  for_each = fileset("../dist/assets", "*.woff2")
-  source = "../dist/assets/${each.value}"
-  acl = "public-read"
-  content_type = "font/woff2"
-  etag   = filemd5("../dist/assets/${each.value}")
-  bucket = aws_s3_bucket.account.id
-  key    = "assets/${each.value}"
+  key    = each.value
 }
