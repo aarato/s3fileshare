@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, reactive } from "vue";
 import WindowInput from "./WindowInput.vue";
 import { store } from '../store.js'
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
@@ -8,6 +8,12 @@ import {	AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cogn
 import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts"
 import { getUnixTime } from 'date-fns'
 import { Toast, Modal } from "bootstrap" ;
+
+let state = reactive(
+  { 
+    initComplete: false,  // Only show login page when the intialization complete
+  }
+)
 
 function message(msg){
   store.toastMessage = msg
@@ -111,6 +117,7 @@ async function getCredentials () {
 }
 
 async function login(){
+  state.initComplete = false
   console.log("Login submitted")
   await getIdToken()
   await getCredentials()
@@ -130,6 +137,7 @@ onMounted( async () => {
     } catch (error) {
       message("Invalid local configuration! Reverting to default config...")
       localStorage.removeItem("awsConfig")
+      state.initComplete = true;
       return;
     }
   else{
@@ -147,6 +155,7 @@ onMounted( async () => {
     }
     else{
       message(`${res.statusText} - ${configUrl}`)
+      state.initComplete = true;
       return;
     }
   }
@@ -157,15 +166,17 @@ onMounted( async () => {
     url.searchParams.delete("idToken")
     window.location.href=url.href
   }else{
-    getCredentials()
+    await getCredentials()
   }
   
+  state.initComplete = true;
+
 });
 </script>
 
 <template> 
-  <div  class="d-flex flex-column justify-content-center align-items-center" >
-    <div>
+  <div class="d-flex flex-column justify-content-center align-items-center" >
+    <div v-if="state.initComplete">
         <div class="card">
           <div class="card-header bg-dark text-white">
             Login
@@ -179,6 +190,9 @@ onMounted( async () => {
             <button type="submit" class="btn btn-primary float-end" @click="login" >Submit</button>
           </div>
         </div>      
+    </div>
+    <div v-else class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div> 
 </template>

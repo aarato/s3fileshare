@@ -16,7 +16,7 @@ let state = reactive({
 })
 
 function presignedWebSite(){
-  state.text = `${window.location.origin}/index.html?id=${store.aws.idToken}`
+  state.text = `${window.location.origin}/index.html?idToken=${store.aws.idToken}`
 }
 
 
