@@ -1,37 +1,22 @@
 
 resource "aws_s3_bucket" "account" {
   bucket = var.name
-  force_destroy = true
-
-}
-
-resource "aws_s3_bucket_acl" "this" {
-  bucket = aws_s3_bucket.account.id
   acl    = "private"
-}
-resource "aws_s3_bucket_lifecycle_configuration" "this" {
-  bucket = var.name
-  rule {
-    id      = "files"
-    filter {
-      prefix = "files/"
-    }    
-    expiration {
-      days = 1
-    }
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_cors_configuration" "this" {
-  bucket = var.name
-
+  force_destroy = true
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET","PUT","DELETE","HEAD", "POST"]
-    allowed_origins = ["*"] // allowed_origins = ["https://s3-website-test.hashicorp.com"]
+    allowed_origins = ["*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
+  }  
+  lifecycle_rule {
+    id      = "files"
+    enabled = true
+    prefix = "files/"
+    expiration {
+      days = 1
+    }
   }
 }
 
