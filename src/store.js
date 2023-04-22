@@ -23,11 +23,15 @@ export const store = reactive({
     awsLogin:{
       username: { 
         label: "Username", 
-        type: "text",
+        type: "select",
         placeholder: "Enter your username...",
         information: "This is your AWS Cognito username",
         readonly: true,
-        value: "admin"
+        value: "admin",
+        options:[
+          {text:"admin", value: "admin"},
+          {text:"guest", value: "guest"},
+        ],
       },
       password: { 
         label: "Password", 
