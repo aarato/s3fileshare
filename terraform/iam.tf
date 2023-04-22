@@ -3,7 +3,7 @@
 ###
 
 resource "aws_iam_role" "cloudwatch" {
-  name = "${var.name}_api_gateway_cloudwatch_global"
+  name = "${local.name}_api_gateway_cloudwatch_global"
 
   assume_role_policy = <<EOF
 {
@@ -23,7 +23,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch" {
-  name = "${var.name}_default"
+  name = "${local.name}_default"
   role = aws_iam_role.cloudwatch.id
 
   policy = <<EOF
@@ -54,7 +54,7 @@ EOF
 ###
 
 resource "aws_iam_role" "cognito_authenticated" {
-  name = "${var.name}_cognito_authenticated"
+  name = "${local.name}_cognito_authenticated"
 
   assume_role_policy = <<EOF
 {
@@ -81,7 +81,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cognito_policy" {
-  name = "${var.name}_cognito_policy"
+  name = "${local.name}_cognito_policy"
   role = aws_iam_role.cognito_authenticated.id
 
   policy = <<EOF
@@ -105,7 +105,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "s3_access_to_folder" {
-  name = "${var.name}_s3_access_to_folder"
+  name = "${local.name}_s3_access_to_folder"
   role = aws_iam_role.cognito_authenticated.id
 
   policy = <<EOF
@@ -119,7 +119,7 @@ resource "aws_iam_role_policy" "s3_access_to_folder" {
                 "s3:ListBucketVersions",
                 "s3:ListBucket"
             ],
-            "Resource": "arn:aws:s3:::${var.name}",
+            "Resource": "arn:aws:s3:::${local.name}",
             "Condition": {
                 "StringLike": {
                     "s3:prefix": "files*"
@@ -133,13 +133,13 @@ resource "aws_iam_role_policy" "s3_access_to_folder" {
                 "s3:ListBucketMultipartUploads",
                 "s3:ListMultipartUploadParts"
             ],
-            "Resource": [ "arn:aws:s3:::${var.name}", "arn:aws:s3:::${var.name}/*" ]
+            "Resource": [ "arn:aws:s3:::${local.name}", "arn:aws:s3:::${local.name}/*" ]
         },
         {
             "Sid": "GetBucketLoc",
             "Effect": "Allow",
             "Action": "s3:GetBucketLocation",
-            "Resource": "arn:aws:s3:::${var.name}"
+            "Resource": "arn:aws:s3:::${local.name}"
         },
         {
             "Sid": "WriteRules",
@@ -150,7 +150,7 @@ resource "aws_iam_role_policy" "s3_access_to_folder" {
                 "s3:DeleteObject",
                 "s3:GetObject"
             ],
-            "Resource": "arn:aws:s3:::${var.name}/${var.s3folder}/*"
+            "Resource": "arn:aws:s3:::${local.name}/${var.s3folder}/*"
         }
     ]
   }
@@ -158,7 +158,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "apigateway_invoke" {
-  name = "${var.name}_apigateway_invoke"
+  name = "${local.name}_apigateway_invoke"
   role = aws_iam_role.cognito_authenticated.id
 
   policy = <<EOF
@@ -183,9 +183,9 @@ EOF
 ###
 
 resource "aws_iam_policy" "lambda_websocket" {
-  name        = "${var.name}_lambda_websocket"
+  name        = "${local.name}_lambda_websocket"
   path        = "/"
-  description = "${var.name}_lambda_websocket"
+  description = "${local.name}_lambda_websocket"
 
   policy = <<EOF
 {

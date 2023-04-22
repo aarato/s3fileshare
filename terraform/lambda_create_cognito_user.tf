@@ -10,7 +10,7 @@ data "aws_lambda_invocation" "create_admin" {
 {
   "userpoolid": "${aws_cognito_user_pool.pool.id}",
   "username": "admin",
-  "password": "${var.password}"
+  "password": "${local.password}"
 }
 JSON
 }
@@ -23,7 +23,7 @@ data "aws_lambda_invocation" "create_guest" {
 {
   "userpoolid": "${aws_cognito_user_pool.pool.id}",
   "username": "guest",
-  "password": "${var.password}"
+  "password": "${local.password}"
 }
 JSON
 }

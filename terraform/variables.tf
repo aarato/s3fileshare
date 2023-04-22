@@ -1,5 +1,5 @@
 variable "name" {
-  # default="MyAwesomeUniqeS3BucketName"
+  default=""
   type = string
   description = "Unique AWS S3 bucket name that is also used as a prefix for ALL resource names created by Terraform."
 }
@@ -17,9 +17,22 @@ variable "region" {
 }
 
 variable "password" {
-  default="Admin123#"
+  default = ""
   type = string
   description = "Default password for admin user."
+}
+
+resource "random_string" "password" {
+  length           = 16
+  special          = false
+}
+
+resource "random_string" "name" {
+  length           = 8
+  upper          = false
+  lower          = false
+  special        = false
+  numeric        = true
 }
 
 # Application definition
@@ -35,6 +48,8 @@ variable "app_environment" {
 }
 
 locals {
+  name                                   = var.name != "" ? var.name : random_string.name.result
+  password                               = var.password != "" ? var.password : random_string.password.result
   create_cognito_user_name               = "${lower(var.name)}-${lower(var.app_environment)}-create_cognito_user"
   create_cognito_user_source_dir         = "${path.module}/aws_lambda_functions/create_cognito_user"
   create_cognito_user_zip_file           = "${path.module}/aws_lambda_functions/${local.create_cognito_user_name}.zip"

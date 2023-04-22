@@ -1,6 +1,15 @@
 resource "aws_cognito_user_pool" "pool" {
-  name = var.name
+  name = local.name
   auto_verified_attributes = ["email"]
+
+  password_policy {
+    minimum_length = 8
+    require_lowercase = false
+    require_uppercase = false
+    require_numbers = true
+    require_symbols = false
+  }
+
 }
 
 resource "aws_cognito_user_group" "admin" {
@@ -9,14 +18,14 @@ resource "aws_cognito_user_group" "admin" {
 }
 
 resource "aws_cognito_user_pool_client" "client" {
-  name = var.name
+  name = local.name
   user_pool_id = aws_cognito_user_pool.pool.id
   explicit_auth_flows = ["ALLOW_CUSTOM_AUTH","ALLOW_USER_SRP_AUTH","ALLOW_ADMIN_USER_PASSWORD_AUTH","ALLOW_USER_PASSWORD_AUTH","ALLOW_USER_PASSWORD_AUTH","ALLOW_REFRESH_TOKEN_AUTH"]
 }   
 
 
 resource "aws_cognito_identity_pool" "id_pool" {
-  identity_pool_name               = var.name
+  identity_pool_name               = local.name
   allow_unauthenticated_identities = false
   allow_classic_flow               = false
 

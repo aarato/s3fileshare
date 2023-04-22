@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "account" {
-  bucket = var.name
+  bucket = local.name
   force_destroy = true
 
 }
@@ -10,7 +10,7 @@ resource "aws_s3_bucket_acl" "this" {
   acl    = "private"
 }
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
-  bucket = var.name
+  bucket = local.name
   rule {
     id      = "files"
     filter {
@@ -24,7 +24,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 }
 
 resource "aws_s3_bucket_cors_configuration" "this" {
-  bucket = var.name
+  bucket = local.name
 
   cors_rule {
     allowed_headers = ["*"]

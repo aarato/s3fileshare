@@ -2,7 +2,7 @@
 ### API GATEWAY
 ###
 resource "aws_apigatewayv2_api" "clipboard" {
-  name                       = "${var.name}_clipboard"
+  name                       = "${local.name}_clipboard"
   protocol_type              = "WEBSOCKET"
   route_selection_expression = "$request.body.action"
 
@@ -119,7 +119,7 @@ resource "aws_apigatewayv2_stage" "stage_prod" {
 
 # This API GATEWAY AUTHORIZER IS NOT GOOD FOR WEBSOCKETS BUT STILL A GOOD SNIP FOR HTTP.
 # resource "aws_apigatewayv2_authorizer" "example" {
-#   name                   = "${var.name}_api_authorizer"
+#   name                   = "${local.name}_api_authorizer"
 #   api_id           = aws_apigatewayv2_api.clipboard.id
 #   authorizer_type  = "REQUEST"  # This is the only supported type for websocket API
 #   identity_sources = ["$request.header.Authorization"]
