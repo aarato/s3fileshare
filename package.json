@@ -1,6 +1,7 @@
 {
-  "name": "vue3template",
-  "version": "0.0.0",
+  "name": "s3fileshare",
+  "version": "1.0.0",
+  "title": "s3fileshare",
   "private": true,
   "scripts": {
     "dev": "vite --port 4000",
@@ -15,7 +16,7 @@
     "@aws-sdk/client-sts": "^3.310.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.310.0",
     "@aws-sdk/lib-storage": "^3.312.0",
-    "@aws-sdk/s3-request-presigner": "^3.312.0",
+    "@aws-sdk/s3-request-presigner": "^3.317.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.1",

@@ -1,14 +1,8 @@
 <script setup>
-import { onMounted, reactive, ref, computed} from "vue";
+import { onMounted} from "vue";
 import { store } from "../store.js"
 import WindowInput from "./WindowInput.vue";
-import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-// var AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-import {	AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
-import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts"
-import { getUnixTime } from 'date-fns'
-import { Modal, Toast } from 'bootstrap'
+import { Toast } from 'bootstrap'
 
 function message(msg){
   store.toastMessage = msg
@@ -59,7 +53,7 @@ onMounted(() => {
     <div class="modal fade" id="modalAWSConfig" tabindex="-1" aria-labelledby="modalAWSConfigLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="modalAWSConfigLabel">AWS settings</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>

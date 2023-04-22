@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { onMounted } from "vue";
 import { Modal, Toast } from 'bootstrap'
 import ButtonIcon from "./ButtonIcon.vue";
 import { store } from '../store.js'
@@ -10,6 +10,12 @@ function message(msg){
   store.toastMessage = msg
   var bsAlert = new Toast( document.getElementById('liveToast') );//inizialize it      
   bsAlert.show();//show it   
+}
+
+function aws_share(){
+  let elem = document.getElementById("modalAWSShare")
+  let modal = new Modal(elem)
+  modal.show()    
 }
 
 function copy(){
@@ -29,8 +35,8 @@ async function logout(){
 }
 
 function save(){
-  const region = store.inputs.awsSettings.region.value
-  const bucket = store.inputs.awsSettings.s3BucketName.value
+  const region = store.inputs.awsConfig.region.value
+  const bucket = store.inputs.awsConfig.bucket.value
   const credentials = store.aws.credentials
   const body = store.aws.clipboard
 
@@ -62,11 +68,6 @@ function save(){
 
 }
 
-function aws_share(){
-  let elem = document.getElementById("modalAWSSettings")
-  let modal = new Modal(elem)
-  modal.show()    
-}
 
 onMounted(() => {
   console.log("Mounted: AWS Button Group")
@@ -80,6 +81,7 @@ onMounted(() => {
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="save2"      text="Save" @click="save"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="clipboard"  text="Copy" @click="copy"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="trash"      text="Delete" @click="trash"/>
+    <ButtonIcon v-if="store.aws.credentials && store.aws.navView=='files'" color="dark" icon="share"      text="Share" @click="aws_share"/>
     <ButtonIcon v-if="store.aws.credentials" color="dark" icon="box-arrow-right" text="Logout" @click="logout"/>
   </div>     
 </template>

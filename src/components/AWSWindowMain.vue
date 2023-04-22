@@ -43,7 +43,11 @@ onMounted( async () => {
         <li class="nav-item">
           <button id="navClipboard" class="nav-link" :class="store.aws.navView=='clipboard' ? 'active' : ''" aria-current="page" @click="activateClipboard" >
             Clipboard
-            <div v-if="store.awsWebSocketConnected" class="spinner-grow spinner-grow-sm" role="status">
+            <div 
+              v-if="store.aws.navView=='clipboard' && !store.awsWebSocketConnected" 
+              class="spinner-border spinner-border-sm" 
+              role="status"
+            >
               <span class="visually-hidden">Loading...</span>
             </div>
           </button>

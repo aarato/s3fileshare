@@ -1,15 +1,13 @@
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { onMounted } from "vue";
 import WindowInput from "./WindowInput.vue";
 import { store } from '../store.js'
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-// var AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 import {	AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts"
 import { getUnixTime } from 'date-fns'
 import { Toast, Modal } from "bootstrap" ;
-import ButtonIcon from "./ButtonIcon.vue";
 
 function message(msg){
   store.toastMessage = msg
@@ -169,7 +167,7 @@ onMounted( async () => {
   <div  class="d-flex flex-column justify-content-center align-items-center" >
     <div>
         <div class="card">
-          <div class="card-header">
+          <div class="card-header bg-dark text-white">
             Login
             <span class="float-end" @click="aws_config">
               <i class="bi bi-gear"></i>

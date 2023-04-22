@@ -6,6 +6,7 @@ import { S3, S3Client, ListObjectsCommand, GetObjectCommand, DeleteObjectCommand
 import { Upload as UploadMulti } from "@aws-sdk/lib-storage";
 import { add , format } from 'date-fns'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Toast } from "bootstrap" ;
 
 let state = reactive({ 
   text: "", 
@@ -15,6 +16,18 @@ let state = reactive({
   uploadOngoing: false,
 })
 
+function message(msg){
+  store.toastMessage = msg
+  var bsAlert = new Toast( document.getElementById('liveToast') );//inizialize it      
+  bsAlert.show();//show it   
+}
+
+async function share(key){
+  const url = await signedUrl(key)
+  navigator.clipboard.writeText(url)
+  store.aws.clipboard = url
+  message(`Pre-signed URL of file ${key} was copied to Clipboard!`)
+}
 
 async function signedUrl(key){
   let credentials = store.aws.credentials
@@ -26,7 +39,6 @@ async function signedUrl(key){
   });
   const command = new GetObjectCommand({ Bucket:  bucket, Key: key});
   const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-  console.log(url)
   return url
 }
 
@@ -194,7 +206,7 @@ onMounted( async () => {
 
     <!-- FILELIST -->
     <table class="table">
-      <thead>
+      <thead v-if="state.files.length">
         <tr>
           <th scope="col">File</th>
           <th scope="col">Size</th>
@@ -215,8 +227,8 @@ onMounted( async () => {
               <button type="button" class="btn btn-small btn-outline-secondary" @click="deleteKey(file.Key)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
                 <i class="bi-trash-fill" ></i>
               </button>
-              <button type="button" class="btn btn-small btn-outline-secondary" @click="signedUrl(file.Key)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pre-signed URL to clipboard">
-                <i class="bi-pen-fill" ></i>
+              <button type="button" class="btn btn-small btn-outline-secondary" @click="share(file.Key)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share File">
+                <i class="bi-share-fill" ></i>
               </button>
             </div>
           </td>              
