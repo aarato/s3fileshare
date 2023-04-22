@@ -32,6 +32,7 @@ async function logout(){
   localStorage.removeItem("idToken");
   localStorage.removeItem("idToken_expiration");
   store.aws.credentials = null
+  store.inputs.awsLogin.password.value=""
 }
 
 function save(){

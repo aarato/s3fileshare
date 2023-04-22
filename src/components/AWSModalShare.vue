@@ -15,6 +15,11 @@ let state = reactive({
   text: ""
 })
 
+function copy(){
+  navigator.clipboard.writeText(store.aws.clipboard)
+  message("content was copied to OS clipboard!")
+}
+
 function presignedWebSite(){
   state.text = `${window.location.origin}/index.html?idToken=${store.aws.idToken}`
 }
@@ -96,8 +101,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="download">Download</button>
-            <button type="button" class="btn btn-secondary" @click="save">Save</button>
+            <button type="button" class="btn btn-primary" @click="copy">Copy</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>

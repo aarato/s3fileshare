@@ -121,6 +121,7 @@ async function login(){
   console.log("Login submitted")
   await getIdToken()
   await getCredentials()
+  state.initComplete = true;
 }
 
 
