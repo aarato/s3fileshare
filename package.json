@@ -1,0 +1,49 @@
+{
+  "name": "vue3template",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port 4000",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@aws-amplify/core": "^5.1.8",
+    "@aws-sdk/client-cognito-identity": "^3.310.0",
+    "@aws-sdk/client-s3": "^3.312.0",
+    "@aws-sdk/client-sts": "^3.310.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.310.0",
+    "@aws-sdk/lib-storage": "^3.312.0",
+    "@aws-sdk/s3-request-presigner": "^3.312.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
+    "@popperjs/core": "^2.11.6",
+    "amazon-cognito-identity-js": "^6.2.0",
+    "axios": "^1.2.1",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.2",
+    "date-fns": "^2.29.3",
+    "express": "^4.18.2",
+    "smoothie": "^1.36.1",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4",
+    "vue": "^3.2.45",
+    "websocket": "^1.0.34"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "sass": "^1.57.1",
+    "vite": "^4.0.0",
+    "vite-plugin-node-polyfills": "^0.8.1"
+  }
+}
