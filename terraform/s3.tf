@@ -63,21 +63,41 @@ resource "aws_s3_object" "favicon" {
 }
 
 resource "aws_s3_object" "css" {
-  for_each = fileset("../dist/css", "*")
-  source = "../dist/css/${each.value}"
+  for_each = fileset("../dist/assets", "*.css")
+  source = "../dist/assets/${each.value}"
   acl = "public-read"
   content_type = "text/css"
-  etag   = filemd5("../dist/css/${each.value}")
+  etag   = filemd5("../dist/assets/${each.value}")
   bucket = aws_s3_bucket.account.id
-  key    = "css/${each.value}"
+  key    = "assets/${each.value}"
 }
 
 resource "aws_s3_object" "js" {
-  for_each = fileset("../dist/", "js/*")
-  source = "../dist/${each.value}"
+  for_each = fileset("../dist/assets", "*.js")
+  source = "../dist/assets/${each.value}"
   acl = "public-read"
   content_type = "text/javascript"
-  etag   = filemd5("../dist/${each.value}")
+  etag   = filemd5("../dist/assets/${each.value}")
   bucket = aws_s3_bucket.account.id
-  key    = each.value
+  key    = "assets/${each.value}"
+}
+
+resource "aws_s3_object" "woff" {
+  for_each = fileset("../dist/assets", "*.woff")
+  source = "../dist/assets/${each.value}"
+  acl = "public-read"
+  content_type = "font/woff"
+  etag   = filemd5("../dist/assets/${each.value}")
+  bucket = aws_s3_bucket.account.id
+  key    = "assets/${each.value}"
+}
+
+resource "aws_s3_object" "woff2" {
+  for_each = fileset("../dist/assets", "*.woff2")
+  source = "../dist/assets/${each.value}"
+  acl = "public-read"
+  content_type = "font/woff2"
+  etag   = filemd5("../dist/assets/${each.value}")
+  bucket = aws_s3_bucket.account.id
+  key    = "assets/${each.value}"
 }

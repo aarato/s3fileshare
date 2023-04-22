@@ -15,6 +15,19 @@ data "aws_lambda_invocation" "create_admin" {
 JSON
 }
 
+data "aws_lambda_invocation" "create_guest" {
+  # function_name = module.lambda_create_cognito_user.lambda_function_name
+  function_name = aws_lambda_function.create_cognito_user.function_name
+
+  input = <<JSON
+{
+  "userpoolid": "${aws_cognito_user_pool.pool.id}",
+  "username": "guest",
+  "password": "${var.password}"
+}
+JSON
+}
+
 
 ###
 ### create_cognito_user

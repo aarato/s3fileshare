@@ -1,144 +1,279 @@
-import { createStore } from 'vuex'
+import { reactive } from 'vue'
 
-const store = createStore({
-    state () {
-      return {
-        url: "http://localhost;8000",
-        username: "admin",
-        password: "",
-        status: "not logged in",
-        socket: null,
-        region: "",  //"us-east-2"
-        bucket: "",  //"accountid_name"
-        userPoolId: "", //us-east-2_j3Vcx1Ss3
-        clientId: "", //7d725jjrn1ve7gpce38bo06rvp
-        identityPoolId: "",  //us-east-2:79ae3f9e-4e21-4a17-a624-d7818293439e
-        websocket_api: "", 
-        idToken: "",
-        credentials: null,
-        toastId: "liveToast",
-        toastMessage: "",
-        clipboard: "",
-        uploadPartSize: "5242880",
-        uploadPercent: "0",
-        input: {
-          name: "input",
-          input_rows: [
-            {
-              "id": "myselect", 
-              "type": "select",
-              "label": "AWS Action",
-              "options": [
-                {"text": "List S3 Objects","value": "ListObjectsCommand"}, 
-                {"text": "Upload File","value": "UploadFile"}]},
-          ],
-          values: {
-            "myselect": "ListObjectsCommand"
-          }
-        },
-        output: {
-          name: "output",
-          text: "My test output text..."
-        },
-        inputLogin:{
-          input_rows: [
-            { id: "username", label: "Username" },
-            { id: "password", label: "Password", type: "password"}
-          ],
-          values:{
-            username: "admin",
-            password: process.env.NODE_ENV === "development" ? "Admin123#": ""
-          },
-        },
-        inputS3Upload:{
-          name: "inputS3Upload",
-          input_rows: [ {"id": "s3fileupload", "type": "file", label: "S3 Upload", information: "Pick a file that you want to upload to a predefined S3 bucket"}  ],
-          values:{
-            s3fileupload: null,
-          }
-        },
-        visible: {
-          navDownload: true,
-          navUpload: false,
-          navClipboard: false,
-          navSettings: false
-        }   
-      }
+export const store = reactive({
+  aws:{
+    credentials: null,
+    idToken: null,
+    status: "Disconnected",
+    clipboard: "",
+    awsWebSocketConnected: false,
+    navView: "files" //Controls which view is shown on navbar
+  },
+  socket: null,
+  toastMessage: "",
+  textarea: "",
+  loggedIn: false,
+  series: null,
+  chart:{
+    series: null,
+    width: 500,
+    height: 100
+  },
+  inputs:{
+    awsLogin:{
+      username: { 
+        label: "Username", 
+        type: "select",
+        placeholder: "Enter your username...",
+        information: "This is your AWS Cognito username",
+        readonly: true,
+        value: "admin",
+        options:[
+          {text:"admin", value: "admin"},
+          {text:"guest", value: "guest"},
+        ],
+      },
+      password: { 
+        label: "Password", 
+        type: "password",
+        placeholder: "Enter password here...",
+        information: "Enter password here...",
+        value: ""
+      },
     },
-    mutations: {
-      setStatus (state,payload) {
-        state.status = payload
+    awsConfig:{
+      bucket: { 
+        label: "AWS S3 Bucket Name", 
+        type: "text",
+        placeholder: "Enter AWS S3 Bucket Name here...",
+        information: "Enter AWS S3 Bucket Name here...",
+        value: ""
       },
-      setState (state,payload) {
-        if ( payload?.name in state ) {
-          state[payload.name] = payload.value ? payload.value : null
-        }
-        else{
-          return console.log (`No name: ${payload.name} found!`)
-        }
+      region: { 
+        label: "AWS Region", 
+        type: "select",
+        placeholder: "Pick your AWS region",
+        information: "AWS Region Identifier. Pick us-east-1 for easy S3 bucket naming.",
+        value: "us-east-1",
+        options:[
+          {text:"us-east-1", value: "us-east-1"},
+          {text:"us-east-2", value: "us-east-2"},
+          {text:"us-west-1", value: "us-west-1"},
+          {text:"us-west-2", value: "us-west-2"},
+        ],
       },
-      setInput (state,input) {
-        if (input.name) {
-          state.input.name = input.name
-          state.input.input_rows = input.input_rows ? input.input_rows : []
-          state.input.values = {}
-          for (const row of input.input_rows ) {
-            state.input.values[row.id] = row.value ? row.value : ""
-          }
-        }
-        else{
-          state.input = {
-            name: null,
-            input_rows: [],
-            values: {}
-          }
-        }      
+      userPoolId: { 
+        label: "AWS User Pool Id", 
+        type: "text",
+        placeholder: "Enter AWS User Pool Id here...",
+        information: "Enter AWS User Pool Id here...",
+        value: "" //e.g us-east-1_WvkalowgA
       },
-      setOutput (state,output) {
-        if (output.name){
-          state.output.name = output.name ? output.name : "output"
-          state.output.text = output.text ? output.text : ""          
-        }
-        else{
-          state.output = {
-            name: null,
-            text: ""
-          }
-        }
-
+      clientId: { 
+        label: "AWS User Pool Client Id", 
+        type: "text",
+        placeholder: "Enter AWS Client Id here...",
+        information: "Enter AWS Client Id here...",
+        value: "" // e.g 7i36jg8gdgooafqhf46up4v704
       },
-      setInputValue (state,payload) {
-        if ( ! state[payload.name] ) { 
-          return console.log (`No input name ${payload.name} found!`)
-        }
-        if ( ! state[payload.name].values ) {
-          state[payload.name].values = {}
-        }
-        state[payload.name].values[payload.id] = payload.value
+      identityPoolId: { 
+        label: "AWS Identity Pool Id", 
+        type: "text",
+        placeholder: "Enter AWS Identity Pool Id here...",
+        information: "Enter AWS Identity Pool Id here...",
+        value: "" // e.g us-east-1:94c5e4cf-d7bf-4d9c-916b-c8099e9150fe
+      },    
+      websocket_api: { 
+        label: "Websocket API", 
+        type: "text",
+        placeholder: "Enter AWS User Pool Id here...",
+        information: "(e.g.) wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod",
+        value: "" // e.g wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod
       },
-      setInputRows (state,payload) {
-        if ( ! state[payload.name] ) { 
-          return console.log (`No input name ${payload.name} found!`)
-        }
-        let input = state[payload.name]
-        input.input_rows = payload.input_rows
-        if ( !input.values ) {
-          input.values = {}
-        }
-        for (const row of input.input_rows) {
-          if ( ! input.values[row.id] ) {
-            input.values[row.id] = row.value
-          }
-        }
+    },
+    login:{
+        username: { 
+          label: "Username", 
+          type: "text",
+          placeholder: "Enter username1 here...",
+          information: "Enter username1 here...",
+          value: ""
+        },
+        password: { 
+          label: "Password", 
+          type: "password",
+          placeholder: "Enter password here...",
+          information: "Enter password here...",
+          value: ""
+        },
+        auth: { 
+        label: "Authentication Type", 
+        type: "select",
+        placeholder: "Pick your authentication type",
+        information: "This information typically comes from the administrator.",
+        value: "saml",
+        options:[
+          {text:"SAML 2.0", value: "saml"},
+          {text:"Open-ID", value: "openid"},
+          {text:"LDAP", value: "LDAP"},
+        ],
       },
-      setOutputText (state,payload) {
-        if ( ! state[payload.name] ) { 
-          return console.log (`No output name ${payload.name} found!`)
-        }
-        state[payload.name].text = payload.text
-      }
-
-    }
-  })
-
-export default store
+      certfile: { 
+        label: "Certificate File", 
+        type: "file",
+        placeholder: "Pick your file here...",
+        information: "This is your private key file for authentication.",
+        value: ""
+      },
+      rootcert: { 
+        label: "Root Certificate", 
+        type: "textarea",
+        placeholder: "Cut & paste your root certificate here...",
+        information: "Your trusted root Certificate Authority.",
+        value: ""
+      },
+    },
+    socketio:{
+      url: { 
+        label: "URL", 
+        type: "text",
+        placeholder: "Enter socket.io URL.",
+        information: "Enter socket.io URL here..",
+        value: "http://localhost:5000"
+      },
+      token: { 
+        label: "Token", 
+        type: "password",
+        placeholder: "Optional auth token...",
+        information: "Optional authentication token",
+        value: ""
+      },
+      connect: { 
+        label: "Auto-connect", 
+        type: "select",
+        placeholder: "Pick your authentication type",
+        information: "This information typically comes from the administrator.",
+        value: false,
+        options:[
+          {text:"Yes", value: true},
+          {text:"No", value: false},
+        ],
+      },
+    },    
+    awsUpload:{
+      file: { 
+        label: "Upload", 
+        type: "file",
+        placeholder: "Upload",
+        information: "Pick the file that needs to be uploaded!",
+        value: ""
+      },      
+    },
+    // awsSettings:{
+    //   username: { 
+    //     label: "Username", 
+    //     type: "text",
+    //     placeholder: "Enter username1 here...",
+    //     information: "Enter username1 here...",
+    //     value: "admin"
+    //   },
+    //   password: { 
+    //     label: "Password", 
+    //     type: "password",
+    //     placeholder: "Enter password here...",
+    //     information: "Enter password here...",
+    //     value: "Admin123#"
+    //   },
+    //   s3BucketName: { 
+    //     label: "AWS S3 Bucket Name", 
+    //     type: "text",
+    //     placeholder: "Enter AWS S3 Bucket Name here...",
+    //     information: "Enter AWS S3 Bucket Name here...",
+    //     value: ""
+    //   },
+    //   websocket_api: { 
+    //     label: "Websocket API", 
+    //     type: "text",
+    //     placeholder: "Enter AWS User Pool Id here...",
+    //     information: "(e.g.) wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod",
+    //     value: ""
+    //   },
+    //   userPoolId: { 
+    //     label: "AWS User Pool Id", 
+    //     type: "text",
+    //     placeholder: "Enter AWS User Pool Id here...",
+    //     information: "Enter AWS User Pool Id here...",
+    //     value: ""
+    //   },
+    //   clientId: { 
+    //     label: "AWS User Pool Client Id", 
+    //     type: "text",
+    //     placeholder: "Enter AWS Client Id here...",
+    //     information: "Enter AWS Client Id here...",
+    //     value: ""
+    //   },
+    //   identityPoolId: { 
+    //     label: "AWS Identity Pool Id", 
+    //     type: "text",
+    //     placeholder: "Enter AWS Identity Pool Id here...",
+    //     information: "Enter AWS Identity Pool Id here...",
+    //     value: ""
+    //   },    
+    //   region: { 
+    //     label: "AWS Region", 
+    //     type: "select",
+    //     placeholder: "Pick your AWS region",
+    //     information: "AWS Region Identifier. Pick us-east-1 for easy S3 bucket naming.",
+    //     value: "us-east-1",
+    //     options:[
+    //       {text:"us-east-1", value: "us-east-1"},
+    //       {text:"us-east-2", value: "us-east-2"},
+    //       {text:"us-west-1", value: "us-west-1"},
+    //       {text:"us-west-2", value: "us-west-2"},
+    //     ],
+    //   },
+    //   idToken: { 
+    //     label: "AWS Id Token", 
+    //     type: "textarea",
+    //     placeholder: "AWS Id Token...",
+    //     information: "Id Token generated by successful Cognito User Pool login",
+    //     value: ""
+    //   },
+    //   account: { 
+    //     label: "AWS Account Number", 
+    //     type: "text",
+    //     placeholder: "AWS Account Number",
+    //     information: "AWS Account Numbera associated with the provided login",
+    //     value: ""
+    //   },
+    //   userid: { 
+    //     label: "AWS Account userid", 
+    //     type: "text",
+    //     placeholder: "AWS Account userid",
+    //     information: "AWS Account userid associated with the provided login",
+    //     value: ""
+    //   },
+    //   arn: { 
+    //     label: "AWS Resource Name", 
+    //     type: "text",
+    //     placeholder: "AWS Resource Name",
+    //     information: "AWS Resource Name associated with the provided login",
+    //     value: ""
+    //   },
+    //   accessKeyId: { 
+    //     label: "AWS Access Key Id", 
+    //     type: "text",
+    //     placeholder: "AWS Access Key Id",
+    //     information: "AWS Access Key Id",
+    //     value: ""
+    //   },
+    //   secretAccessKey: { 
+    //     label: "AWS Secret Access Key", 
+    //     type: "text",
+    //     placeholder: "AWS Secret Access Key",
+    //     information: "AWS Secret Access Key",
+    //     value: ""
+    //   },
+    // },
+  }
+})
