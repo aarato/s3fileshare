@@ -77,15 +77,12 @@ aws cognito-idp admin-set-user-password --user-pool-id "us-east-1_7GZQCV8KY"  --
 │   ├── output.tf       -> Terraform Output variables for Website and WebSocket URLs
 │   ├── lambda.tf       -> Terraform Lambda resources (roles & policies)
 │   ├── s3.tf           -> Terraform S3 resources for the web front-end
-│   ├── lambda_clipboard_connect.tf     -> Terraform lambda function Node.js back-end code handling WebSocket connect
-│   ├── lambda_clipboard_disconnect.tf  -> Terraform lambda function Node.js back-end code handling WebSocket disconnect     
-│   ├── lambda_clipboard_sendmessage.tf -> Terraform lambda function Node.js back-end code replicating clipboard realtime changes to all connected clients   
-│   ├── lambda_create_cognito_user      -> Terraform lambda function Python back-end code that creates the admin user and resets the password
-│   ├── aws_lambda_functions            -> Directory containing the actual Node.js and Python code for the Lambda functions.
+│   ├── lambda....tf    -> Terraform lambda function definitions to support backend functionality
 │   ├── main.tf         -> Terraform AWS provider and data definitions
 │   ├── output.tf       -> Terraform output with URL & password
 │   ├── s3.tf           -> Terraform S3 resources
 │   ├── variables.tf    -> Terraform variables
+│   ├── aws_lambda..    -> Lambda code folder to be uploaded during deployment
 │   └── template                        
 │       └── awsconfig.json              -> Terraform JSON template to provide AWS resource IDs for the web front-end
 └── README.md           -> This readme file
