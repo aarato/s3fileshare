@@ -6,8 +6,8 @@ Share files and clipboard content real-time, securely using your own AWS account
 
 - All files are stored on a dedicated S3 bucket which acts both as a static web frontend and as a file server.
 - The built-in clipboard allows real-time communication (chat) between logged in users.
-- Files uploaded to the server can be shared easicly via pre-signed URL links
-- Users can also upload/download files from the CLI using pre-signed URLs
+- Files uploaded to the server can be shared easily via pre-signed URL links (no login needed!)
+- Users can also upload/download files from the CLI (e.g. curl) using pre-signed URLs
 - Access to the entire website can be shared by third-parties using temporary Identity tokens.
 - Files are automatically deleted after 24 hours at midnight UTC the following day for security and cost reasons.
 - Security tokens and pre-signed URLs automatically expire after approximately 1 hour.
@@ -18,10 +18,8 @@ Share files and clipboard content real-time, securely using your own AWS account
 - Authentication is controlled by AWS Cognito User Pool and it is automatically created/deleted by Terraform.
 - Aggressive expiration policies ensure that all information stored on the server are only retained temporarily.
 - The website can generate a pre-signed URLs to providfe access for third parties without a sign-up process.
-- Content of the "clipboard" is securely proxied by an AWS API Gateway real-time without even temporarily storing it anywhere.
-- Easy to remember and hard to block access to the website *https://s3.amazonaws.com//[BUCKET]/index.html*, if defined  on us-east-1.
-
-### Demo
+- Clipboard communication is securely proxied via AWS real-time without even temporarily storing it in the cloud.
+- Easy to remember and hard to block access to the website *https://s3.amazonaws.com//[BUCKET]/index.html*.
 <!-- ![Alt Text](copyrun.gif) -->
 
 # Getting started
@@ -32,9 +30,9 @@ git clone https://github.com/aarato/s3fileshare
 cd ./s3fileshare/terraform
 ```
 3. Optional, change the the variables in the variables.tf file.
-- name: Unique AWS S3 bucket name that is also used as a prefix for ALL resource names created by Terraform (default: random 8 digit)
-- password: The password used for the defualt admin user (efault: random 16 characters).
-- region: (Optional) The AWS region where the resources will be created (Default: us-east-1).
+- name: Unique AWS S3 bucket name that is also used as a prefix for ALL resource names created by Terraform (Default: random 8 digit)
+- password: The password used for the defualt admin user (Default: random 16 characters).
+- region: The AWS region where the resources will be created (Default: us-east-1).
 
 4. Use the terraform command to initialize, plan and apply changes to your environment. You have to be in the terraform subdirectory to do this!
 ```
