@@ -6,8 +6,12 @@ resource "aws_cognito_user_pool" "pool" {
     minimum_length = 8
     require_lowercase = false
     require_uppercase = false
-    require_numbers = true
+    require_numbers = false
     require_symbols = false
+  }
+
+  lambda_config {
+    post_authentication = aws_lambda_function.cognito_deactivate_guest.arn
   }
 
 }

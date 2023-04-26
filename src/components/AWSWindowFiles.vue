@@ -8,10 +8,15 @@ import { add , format } from 'date-fns'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Toast } from "bootstrap" ;
 
+const emit = defineEmits({
+  submit(payload) {
+    console.log("SUbmit happened!")
+  }
+})
+
 let state = reactive({ 
   text: "", 
   id: null,
-  files : [],
   uploadPercent: 1,
   uploadOngoing: false,
 })
@@ -54,13 +59,13 @@ async function listObjects(){
     });
   let command = new ListObjectsCommand({ Bucket: bucket, Prefix: file_prefix});
   let result = await s3Client.send(command)
-  state.files = result.Contents ? result.Contents : []
+  store.files = result.Contents ? result.Contents : []
 
-  for (let index = 0; index < state.files.length; index++) {
-      let expireDate = add(state.files[index].LastModified, {days: 2})
+  for (let index = 0; index < store.files.length; index++) {
+      let expireDate = add(store.files[index].LastModified, {days: 2})
       expireDate.setUTCHours(0, 0, 0, 0)
-      state.files[index].expireDate = format( expireDate, "pp PP" )
-      state.files[index].LastModified = format( state.files[index].LastModified, "pp PP" )
+      store.files[index].expireDate = format( expireDate, "pp PP" )
+      store.files[index].LastModified = format( store.files[index].LastModified, "pp PP" )
       
     }  
 }
@@ -206,7 +211,7 @@ onMounted( async () => {
 
     <!-- FILELIST -->
     <table class="table">
-      <thead v-if="state.files.length">
+      <thead v-if="store.files && store.files.length">
         <tr>
           <th scope="col">File</th>
           <th scope="col">Size</th>
@@ -216,7 +221,7 @@ onMounted( async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="file in state.files" :key="file.Key" >
+        <tr v-for="file in store.files" :key="file.Key" >
           <!-- <td><a href="#" @click="test()">{{file.Key}}</a></td> -->
           <td><a href="#" @click="download(file.Key)">{{file.Key.split("/").pop()}}</a></td>
           <td>{{file.Size}}</td>

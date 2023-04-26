@@ -3,13 +3,37 @@ import { onMounted } from "vue";
 import { Modal, Toast } from 'bootstrap'
 import ButtonIcon from "./ButtonIcon.vue";
 import { store } from '../store.js'
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-
+import { S3Client, PutObjectCommand,ListObjectsCommand } from "@aws-sdk/client-s3";
+import { add , format } from 'date-fns'
 
 function message(msg){
   store.toastMessage = msg
   var bsAlert = new Toast( document.getElementById('liveToast') );//inizialize it      
   bsAlert.show();//show it   
+}
+
+async function refresh(){
+  let credentials = store.aws.credentials
+  let region      = store.inputs.awsConfig.region.value
+  let bucket      = store.inputs.awsConfig.bucket.value
+  let file_prefix =  "files"
+
+  const s3Client = new S3Client({
+      region: region,
+      credentials: credentials
+    });
+  let command = new ListObjectsCommand({ Bucket: bucket, Prefix: file_prefix});
+  let result = await s3Client.send(command)
+  store.files = result.Contents ? result.Contents : []
+
+  for (let index = 0; index < store.files.length; index++) {
+      let expireDate = add(store.files[index].LastModified, {days: 2})
+      expireDate.setUTCHours(0, 0, 0, 0)
+      store.files[index].expireDate = format( expireDate, "pp PP" )
+      store.files[index].LastModified = format( store.files[index].LastModified, "pp PP" )
+      
+    }
+    message("Refresh complete!")
 }
 
 function aws_share(){
@@ -82,8 +106,9 @@ onMounted(() => {
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="save2"      text="Save" @click="save"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="clipboard"  text="Copy" @click="copy"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="trash"      text="Delete" @click="trash"/>
-    <ButtonIcon v-if="store.aws.credentials && store.aws.navView=='files'" color="dark" icon="share"      text="Share" @click="aws_share"/>
-    <ButtonIcon v-if="store.aws.credentials" color="dark" icon="box-arrow-right" text="Logout" @click="logout"/>
+    <ButtonIcon v-if="store.aws.navView=='files'" color="dark" icon="arrow-clockwise"      text="Refresh" @click="refresh"/>
+    <ButtonIcon v-if="store.aws.navView=='files'" color="dark" icon="share"      text="Share" @click="aws_share"/>
+    <ButtonIcon color="dark" icon="box-arrow-right" text="Logout" @click="logout"/>
   </div>     
 </template>
 

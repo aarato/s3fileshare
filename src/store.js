@@ -7,6 +7,7 @@ export const store = reactive({
     status: "Disconnected",
     clipboard: "",
     awsWebSocketConnected: false,
+    files : [],
     navView: "files" //Controls which view is shown on navbar
   },
   socket: null,

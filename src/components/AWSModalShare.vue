@@ -26,10 +26,43 @@ function presignedWebSite(){
 
 
 function guestAccess() {
-  const min = 100000; // Minimum value for a 6-digit number
-  const max = 999999; // Maximum value for a 6-digit number
+  const min = 10000000; // Minimum value for a 8-digit number
+  const max = 99999999; // Maximum value for a 8-digit number
   const pin = Math.floor(Math.random() * (max - min + 1) + min).toString(); // Generate a random number between min and max, convert it to a string
-  state.text = pin; 
+  const region = store.inputs.awsConfig.region.value
+  const bucket = store.inputs.awsConfig.bucket.value
+  const credentials = store.aws.credentials
+  const body = pin
+
+  const s3Client = new S3Client({
+    region: region,
+    credentials: credentials
+  });
+
+  // Define the parameters for the text file upload
+  const uploadParams = {
+    Bucket: bucket,
+    Key: "files/guestpin.txt",
+    Body: body,
+    ContentType: "text/html"
+  };
+
+  // Upload the file to the S3 bucket
+  const command = new PutObjectCommand(uploadParams);
+  s3Client.send(command).then(
+    (data) => {
+      const msg = `Guest access was activated with pin:${pin}`
+      message(msg)
+      state.text = msg
+    },
+    (err) => {
+      console.log("Error uploading file:", err);
+      message(err.message)
+    }
+  );
+
+
+
 }
 
 async function presignedUpload(os){
