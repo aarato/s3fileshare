@@ -4,7 +4,8 @@ output "url" {
 }
 
 output "password" {
-  value = local.password
+  value = nonsensitive(local.password)
+  #  sensitive = true
 }
 
 output "aws_s3_bucket" {
