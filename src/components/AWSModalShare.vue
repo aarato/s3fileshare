@@ -21,7 +21,7 @@ function copy(){
 }
 
 function presignedWebSite(){
-  state.text = `${window.location.origin}/index.html?idToken=${store.aws.idToken}`
+  state.text = `${window.location.href}?idToken=${store.aws.idToken}`
 }
 
 
