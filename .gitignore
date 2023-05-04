@@ -148,3 +148,5 @@ typings/
 
 # TernJS port file
 .tern-port
+
+.git-credentials
