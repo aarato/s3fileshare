@@ -143,7 +143,7 @@ onMounted( async () => {
     }
   else{
     const url = new URL(window.location.href);
-    const configUrl = `${url.origin}/awsconfig.json`
+    const configUrl = `awsconfig.json`
     const res = await fetch(configUrl);
     if (res.ok) {
       const awsConfig = await res.json().catch(()=> null);
