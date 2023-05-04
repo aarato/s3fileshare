@@ -143,7 +143,11 @@ onMounted( async () => {
     }
   else{
     const url = new URL(window.location.href);
-    const configUrl = `awsconfig.json`
+    // Get the full path without the file name
+    const fullPath = url.pathname;
+    const directoryPath = fullPath.split('/').slice(0, -1).join('/');
+    console.log(directoryPath); 
+    const configUrl = `${directoryPath}/awsconfig.json`
     const res = await fetch(configUrl);
     if (res.ok) {
       const awsConfig = await res.json().catch(()=> null);
