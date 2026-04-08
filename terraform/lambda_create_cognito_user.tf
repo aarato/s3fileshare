@@ -70,7 +70,11 @@ resource "aws_iam_role" "create_cognito_user" {
       },
     ]
   })
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
+}
+
+resource "aws_iam_role_policy_attachment" "create_cognito_user_cognito_power_user" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+  role       = aws_iam_role.create_cognito_user.name
 }
 
 resource "aws_iam_role_policy" "create_cognito_user_logs" {

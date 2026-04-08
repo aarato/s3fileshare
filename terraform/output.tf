@@ -1,11 +1,20 @@
 
+output "login" {
+  value = <<-EOT
+
+    URL:               https://s3.amazonaws.com/${local.name}/index.html
+    Access Key ID:     ${aws_iam_access_key.app_user.id}
+    Secret Access Key: ${aws_iam_access_key.app_user.secret}
+  EOT
+  sensitive = true
+}
+
 output "app_user_access_key_id" {
   value = aws_iam_access_key.app_user.id
 }
 
 output "app_user_secret_access_key" {
-  value     = aws_iam_access_key.app_user.secret
-  sensitive = true
+  value = nonsensitive(aws_iam_access_key.app_user.secret)
 }
 
 output "url" {

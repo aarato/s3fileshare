@@ -46,7 +46,6 @@ resource "aws_iam_role" "cognito_activate_guest" {
       },
     ]
   })
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
 }
 
 resource "aws_iam_role_policy" "cognito_activate_guest_policy" {
@@ -144,6 +143,11 @@ resource "aws_iam_policy" "cognito_activate_guest" {
 }
 
 resource "aws_iam_role_policy_attachment" "cognito_activate_guest" {
-  policy_arn = "${aws_iam_policy.cognito_activate_guest.arn}"
-  role = "${aws_iam_role.cognito_activate_guest.name}"
+  policy_arn = aws_iam_policy.cognito_activate_guest.arn
+  role       = aws_iam_role.cognito_activate_guest.name
+}
+
+resource "aws_iam_role_policy_attachment" "cognito_activate_guest_cognito_power_user" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+  role       = aws_iam_role.cognito_activate_guest.name
 }

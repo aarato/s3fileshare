@@ -41,7 +41,6 @@ resource "aws_iam_role" "cognito_deactivate_guest" {
       },
     ]
   })
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
 }
 
 resource "aws_iam_role_policy" "cognito_deactivate_guest_policy" {
@@ -76,6 +75,11 @@ resource "aws_iam_role_policy" "cognito_deactivate_guest_policy" {
 resource "aws_cloudwatch_log_group" "cognito_deactivate_guest" {
   name = "/aws/lambda/${local.cognito_deactivate_guest_name}"
   retention_in_days = 7
+}
+
+resource "aws_iam_role_policy_attachment" "cognito_deactivate_guest_cognito_power_user" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+  role       = aws_iam_role.cognito_deactivate_guest.name
 }
 
 resource "aws_lambda_permission" "cognito_deactivate_guest" {

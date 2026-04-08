@@ -40,7 +40,11 @@ resource "aws_iam_role" "cognito_change_pass" {
       },
     ]
   })
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
+}
+
+resource "aws_iam_role_policy_attachment" "cognito_change_pass_cognito_power_user" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+  role       = aws_iam_role.cognito_change_pass.name
 }
 
 resource "aws_iam_role_policy" "cognito_change_pass_logs" {
