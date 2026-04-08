@@ -5,11 +5,11 @@ Share files and clipboard content real-time, securely using your own AWS account
 ### Features
 
 - All files are stored on a dedicated S3 bucket which acts both as a static web frontend and as a file server.
-- The built-in clipboard allows real-time communication (chat) between logged in users.
+- The built-in clipboard allows real-time communication (chat) between logged in users, with Save/Load buttons to persist clipboard content to S3.
 - Files uploaded to the server can be shared easily via pre-signed URL links (no login needed).
 - Users can also upload/download files from the CLI (e.g. curl) using pre-signed URLs.
 - Files are automatically deleted after 24 hours at midnight UTC the following day for security and cost reasons.
-- Pre-signed URLs automatically expire after approximately 1 hour.
+- Pre-signed URLs automatically expire after 2 days.
 
 ### Benefits
 
@@ -54,21 +54,14 @@ terraform output
 
 4. Note the outputs:
 ```
-app_user_access_key_id     = "AKIA..."
-app_user_secret_access_key = <sensitive>   # retrieve with: terraform output -raw app_user_secret_access_key
-url                        = "https://27763765.s3.us-east-1.amazonaws.com/index.html"
-websocket_api              = "wss://..."
+login_url               = "https://s3.amazonaws.com/[BUCKET]/index.html"
+login_access_key_id     = "AKIA..."
+login_secret_access_key = "..."
 ```
 
-5. Open the path-style URL in a browser:
-```
-https://s3.amazonaws.com/[BUCKET]/index.html
-```
-> Use the path-style URL (`s3.amazonaws.com/bucket/...`), not the virtual-hosted URL in the `url` output. Path-style is same-origin for all S3 API calls and works through corporate proxies.
+5. Open `login_url` in a browser.
 
-6. Log in with the IAM credentials from step 4:
-   - **AWS Access Key ID** — from `terraform output app_user_access_key_id`
-   - **AWS Secret Access Key** — from `terraform output -raw app_user_secret_access_key`
+6. Log in with `login_access_key_id` and `login_secret_access_key` from the terraform output.
 
 7. Upload/download files and use the clipboard to transfer text between browsers in real-time.
 
@@ -82,11 +75,10 @@ terraform destroy
 # Retrieving Credentials After Deploy
 
 ```bash
-terraform output app_user_access_key_id
-terraform output -raw app_user_secret_access_key
+terraform output
 ```
 
-The secret key is marked sensitive and won't print without `-raw`.
+All three login values (`login_url`, `login_access_key_id`, `login_secret_access_key`) print with plain `terraform output`.
 
 # Building the Frontend
 

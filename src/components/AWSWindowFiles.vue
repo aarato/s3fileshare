@@ -45,7 +45,7 @@ async function signedUrl(key){
     endpoint: "https://s3.amazonaws.com",
   });
   const command = new GetObjectCommand({ Bucket:  bucket, Key: key});
-  const url = await getSignedUrl(s3Client, command, { expiresIn: 259200 });
+  const url = await getSignedUrl(s3Client, command, { expiresIn: 172800 });
   return url
 }
 

@@ -35,7 +35,7 @@ async function presignedDownload(os){
     endpoint: "https://s3.amazonaws.com",
   });
 
-  const presignedUrl = await getSignedUrl(s3Client, new GetObjectCommand({ Bucket: bucket, Key: fileKey }), { expiresIn: 259200 });
+  const presignedUrl = await getSignedUrl(s3Client, new GetObjectCommand({ Bucket: bucket, Key: fileKey }), { expiresIn: 172800 });
   state.text = os === 'unix'
     ? `curl --progress-bar -o '${filename}' '${presignedUrl}'`
     : `C:\\windows\\system32\\curl.exe --progress-bar -o "${filename}" "${presignedUrl}"`
@@ -56,7 +56,7 @@ async function presignedUpload(os){
     endpoint: "https://s3.amazonaws.com",
   });
 
-  const presignedUrl = await getSignedUrl(s3Client, new PutObjectCommand({ Bucket: bucket, Key: fileKey }), { expiresIn: 259200 });
+  const presignedUrl = await getSignedUrl(s3Client, new PutObjectCommand({ Bucket: bucket, Key: fileKey }), { expiresIn: 172800 });
   state.text = os === 'unix'
     ? `curl --progress-bar -X PUT -T '${filename}' '${presignedUrl}' | cat`
     : `C:\\windows\\system32\\curl.exe -v -X PUT -T "${filename}" "${presignedUrl}"`
