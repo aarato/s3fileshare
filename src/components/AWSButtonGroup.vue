@@ -54,11 +54,10 @@ function trash(){
   message("content was deleted!")
 }
 
-async function logout(){
-  localStorage.removeItem("idToken");
-  localStorage.removeItem("idToken_expiration");
+function logout(){
   store.aws.credentials = null
-  store.inputs.awsLogin.password.value=""
+  store.inputs.awsLogin.accessKeyId.value = ""
+  store.inputs.awsLogin.secretAccessKey.value = ""
 }
 
 function save(){
