@@ -13,9 +13,9 @@ Share files and clipboard content real-time, securely using your own AWS account
 
 ### Benefits
 
-- The website is hosted directly on S3 path-style URL (`https://s3.amazonaws.com/[BUCKET]/index.html`) which is unlikely to be blocked by corporate proxies (e.g. Zscaler).
+- The website is hosted on the S3 global path-style URL (`https://s3.amazonaws.com/[BUCKET]/index.html`). **This only works with us-east-1** — the global `s3.amazonaws.com` endpoint routes to us-east-1 by default.
 - Login uses IAM Access Key + Secret Key entered directly in the browser — no credentials are stored in config files.
-- All S3 API calls are same-origin (`s3.amazonaws.com → s3.amazonaws.com`) so CORS is never triggered, even behind strict proxies.
+- All S3 API calls are same-origin (`s3.amazonaws.com → s3.amazonaws.com`) so CORS is never triggered.
 - A least-privilege IAM user is automatically created by Terraform scoped only to the app's S3 folder and WebSocket API.
 - Aggressive expiration policies ensure that all information stored on the server is only retained temporarily.
 - Clipboard communication is securely proxied via AWS WebSocket API Gateway in real-time.
@@ -40,7 +40,7 @@ cd s3fileshare/terraform
 2. (Optional) Set a fixed bucket name and region in `terraform.auto.tfvars`:
 ```hcl
 name   = "mybucketname"   # must be globally unique; default: random 8 digits
-region = "us-east-1"      # default: us-east-1
+region = "us-east-1"      # must be us-east-1 for the s3.amazonaws.com path-style URL to work
 ```
 > **Important:** If you leave `name` blank, a random name is generated on each apply. After `terraform destroy` + `terraform apply` the URL will be different.
 
