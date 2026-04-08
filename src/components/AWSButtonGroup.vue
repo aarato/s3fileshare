@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { Modal, Toast } from 'bootstrap'
 import ButtonIcon from "./ButtonIcon.vue";
 import { store } from '../store.js'
-import { S3Client, PutObjectCommand,ListObjectsCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
 import { add , format } from 'date-fns'
 
 function message(msg){
@@ -20,7 +20,9 @@ async function refresh(){
 
   const s3Client = new S3Client({
       region: region,
-      credentials: credentials
+      credentials: credentials,
+      forcePathStyle: true,
+      endpoint: "https://s3.amazonaws.com",
     });
   let command = new ListObjectsCommand({ Bucket: bucket, Prefix: file_prefix});
   let result = await s3Client.send(command)
@@ -67,7 +69,9 @@ function save(){
 
   const s3Client = new S3Client({
     region: region,
-    credentials: credentials
+    credentials: credentials,
+    forcePathStyle: true,
+    endpoint: "https://s3.amazonaws.com",
   });
 
   // Define the parameters for the text file upload
@@ -94,6 +98,27 @@ function save(){
 }
 
 
+async function load(){
+  const region      = store.inputs.awsConfig.region.value
+  const bucket      = store.inputs.awsConfig.bucket.value
+  const credentials = store.aws.credentials
+
+  const s3Client = new S3Client({
+    region,
+    credentials,
+    forcePathStyle: true,
+    endpoint: "https://s3.amazonaws.com",
+  });
+
+  try {
+    const response = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: "files/clipboard.txt" }))
+    store.aws.clipboard = await response.Body.transformToString()
+    message("clipboard.txt was loaded successfully")
+  } catch (err) {
+    message(err.message)
+  }
+}
+
 onMounted(() => {
   console.log("Mounted: AWS Button Group")
 
@@ -104,6 +129,7 @@ onMounted(() => {
 <template> 
   <div class="btn-group">
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="save2"      text="Save" @click="save"/>
+    <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="folder2-open" text="Load" @click="load"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="clipboard"  text="Copy" @click="copy"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="trash"      text="Delete" @click="trash"/>
     <ButtonIcon v-if="store.aws.navView=='files'" color="dark" icon="arrow-clockwise"      text="Refresh" @click="refresh"/>
