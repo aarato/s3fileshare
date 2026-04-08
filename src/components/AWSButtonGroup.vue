@@ -129,7 +129,7 @@ onMounted(() => {
 <template> 
   <div class="btn-group">
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="save2"      text="Save" @click="save"/>
-    <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="folder2-open" text="Load" @click="load"/>
+    <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="upload" text="Load" @click="load"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="clipboard"  text="Copy" @click="copy"/>
     <ButtonIcon v-if="store.aws.navView=='clipboard'" color="dark" icon="trash"      text="Delete" @click="trash"/>
     <ButtonIcon v-if="store.aws.navView=='files'" color="dark" icon="arrow-clockwise"      text="Refresh" @click="refresh"/>
