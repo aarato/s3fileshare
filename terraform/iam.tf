@@ -50,135 +50,7 @@ EOF
 
 
 ###
-### USED BY COGNITO
-###
-
-resource "aws_iam_role" "cognito_authenticated" {
-  name = "${local.name}_cognito_authenticated"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "cognito-identity.amazonaws.com"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "cognito-identity.amazonaws.com:aud": "${aws_cognito_identity_pool.id_pool.id}"
-        },
-        "ForAnyValue:StringLike": {
-          "cognito-identity.amazonaws.com:amr": "authenticated"
-        }
-      }
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "cognito_policy" {
-  name = "${local.name}_cognito_policy"
-  role = aws_iam_role.cognito_authenticated.id
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cognito-sync:*",
-        "cognito-identity:*"
-      ],
-      "Resource": [
-        "*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "s3_access_to_folder" {
-  name = "${local.name}_s3_access_to_folder"
-  role = aws_iam_role.cognito_authenticated.id
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "ListBucketRules",
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucketVersions",
-                "s3:ListBucket"
-            ],
-            "Resource": "arn:aws:s3:::${local.name}",
-            "Condition": {
-                "StringLike": {
-                    "s3:prefix": "files*"
-                }
-            }
-        },
-        {
-            "Sid": "ListMultipartRules",
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucketMultipartUploads",
-                "s3:ListMultipartUploadParts"
-            ],
-            "Resource": [ "arn:aws:s3:::${local.name}", "arn:aws:s3:::${local.name}/*" ]
-        },
-        {
-            "Sid": "GetBucketLoc",
-            "Effect": "Allow",
-            "Action": "s3:GetBucketLocation",
-            "Resource": "arn:aws:s3:::${local.name}"
-        },
-        {
-            "Sid": "WriteRules",
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:AbortMultipartUpload",
-                "s3:DeleteObject",
-                "s3:GetObject"
-            ],
-            "Resource": "arn:aws:s3:::${local.name}/${var.s3folder}/*"
-        }
-    ]
-  }
-EOF
-}
-
-resource "aws_iam_role_policy" "apigateway_invoke" {
-  name = "${local.name}_apigateway_invoke"
-  role = aws_iam_role.cognito_authenticated.id
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "execute-api:Invoke",
-                "execute-api:ManageConnections"
-            ],
-            "Resource": "${aws_apigatewayv2_api.clipboard.execution_arn}/*"
-        }
-    ]
-}
-EOF
-}
-
-###
-### LAMBDA "WEBSOCKET CLIPBOARD" 
+### LAMBDA "WEBSOCKET CLIPBOARD"
 ###
 
 resource "aws_iam_policy" "lambda_websocket" {
@@ -220,7 +92,7 @@ resource "aws_iam_policy" "lambda_websocket" {
       {
         "Effect": "Allow",
         "Action": [
-          "execute-api:Invoke"           
+          "execute-api:Invoke"
         ],
         "Resource": [
           "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:*"
@@ -229,24 +101,13 @@ resource "aws_iam_policy" "lambda_websocket" {
       {
         "Effect": "Allow",
         "Action": [
-          "execute-api:ManageConnections"           
+          "execute-api:ManageConnections"
         ],
         "Resource": [
           "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:*"
         ]
-      }      
+      }
     ]
 }
 EOF
 }
-
-
-# resource "aws_iam_role_policy_attachment" "roleattach2" {
-#   role       = aws_iam_role.authenticated.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-# }
-
-###
-### LAMBDA "CREATE ADMIN USER" IS USING A BUILT-IN POLICY COGNITOPOWERUSER, PROBABLY CAN BE LOCKED  DOWN FURTHER, BUT IT CANNOT BE INVOKED BY THI APP ONLY BY TERRAFORM
-###
-

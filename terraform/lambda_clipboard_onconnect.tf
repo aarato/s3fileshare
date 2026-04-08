@@ -20,7 +20,6 @@ resource "aws_lambda_function" "clipboard_onconnect" {
   }
 
   depends_on = [
-    aws_cognito_user_pool.pool,
     aws_cloudwatch_log_group.clipboard_onconnect
   ]
 }
