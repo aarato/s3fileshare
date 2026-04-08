@@ -5,5 +5,6 @@
     "clientId"       : "${clientId}",
     "identityPoolId" : "${identityPoolId}",
     "websocket_api"  : "${websocket_api}",
-    "auth_proxy_url" : "${auth_proxy_url}"
+    "auth_proxy_url" : "${auth_proxy_url}",
+    "auth_login_url" : "${auth_login_url}"
 }

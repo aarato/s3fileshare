@@ -42,6 +42,7 @@ async function signedUrl(key){
     region: region,
     credentials: credentials,
     forcePathStyle: true,
+    endpoint: "https://s3.amazonaws.com",
   });
   const command = new GetObjectCommand({ Bucket:  bucket, Key: key});
   const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
@@ -58,6 +59,7 @@ async function listObjects(){
       region: region,
       credentials: credentials,
       forcePathStyle: true,
+      endpoint: "https://s3.amazonaws.com",
     });
   let command = new ListObjectsCommand({ Bucket: bucket, Prefix: file_prefix});
   let result = await s3Client.send(command)
@@ -107,7 +109,7 @@ async function upload(file){
     let bucket      = store.inputs.awsConfig.bucket.value
     let uploadPartSize = "5242880"
     let file_prefix =  "files"
-    const config = { region: region, credentials: credentials, forcePathStyle: true }
+    const config = { region: region, credentials: credentials, forcePathStyle: true, endpoint: "https://s3.amazonaws.com" }
 
     const uploadParams = {
       Bucket:  bucket,
@@ -153,6 +155,7 @@ async function deleteKey (key) {
     region: region,
     credentials: credentials,
     forcePathStyle: true,
+    endpoint: "https://s3.amazonaws.com",
   });
 
   let params = { Bucket:  bucket, Key: key}

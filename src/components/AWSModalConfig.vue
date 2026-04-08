@@ -23,6 +23,7 @@ async function download(){
     store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
     store.inputs.awsConfig.websocket_api.value = awsConfig.websocket_api
     store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
+    store.inputs.awsConfig.auth_login_url.value = awsConfig.auth_login_url
   }
   else{
     message(`${res.statusText} - ${configUrl}`)
@@ -40,6 +41,7 @@ function save(){
   awsConfig.identityPoolId = store.inputs.awsConfig.identityPoolId.value
   awsConfig.websocket_api = store.inputs.awsConfig.websocket_api.value
   awsConfig.auth_proxy_url = store.inputs.awsConfig.auth_proxy_url.value
+  awsConfig.auth_login_url = store.inputs.awsConfig.auth_login_url.value
   localStorage.setItem("awsConfig",JSON.stringify(awsConfig))
 }
 

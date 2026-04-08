@@ -40,6 +40,7 @@ async function login(){
       region,
       credentials: staticCredentials,
       forcePathStyle: true,
+      endpoint: "https://s3.amazonaws.com",
     })
     await s3Client.send(new ListObjectsCommand({ Bucket: bucket, Prefix: "files", MaxKeys: 1 }))
 

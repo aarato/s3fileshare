@@ -21,10 +21,22 @@ resource "aws_cognito_user_group" "admin" {
   user_pool_id = aws_cognito_user_pool.pool.id
 }
 
-resource "aws_cognito_user_pool_client" "client" {
-  name = local.name
+resource "aws_cognito_user_pool_domain" "main" {
+  domain       = local.name
   user_pool_id = aws_cognito_user_pool.pool.id
+}
+
+resource "aws_cognito_user_pool_client" "client" {
+  name         = local.name
+  user_pool_id = aws_cognito_user_pool.pool.id
+
   explicit_auth_flows = ["ALLOW_CUSTOM_AUTH","ALLOW_USER_SRP_AUTH","ALLOW_USER_PASSWORD_AUTH","ALLOW_REFRESH_TOKEN_AUTH"]
+
+  callback_urls                        = ["https://s3.amazonaws.com/${local.name}/index.html"]
+  allowed_oauth_flows                  = ["implicit"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["openid", "profile", "email"]
+  supported_identity_providers         = ["COGNITO"]
 }   
 
 
