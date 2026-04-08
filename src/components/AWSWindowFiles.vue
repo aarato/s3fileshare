@@ -40,7 +40,8 @@ async function signedUrl(key){
   let bucket      = store.inputs.awsConfig.bucket.value  
   const s3Client = new S3Client({
     region: region,
-    credentials: credentials
+    credentials: credentials,
+    forcePathStyle: true,
   });
   const command = new GetObjectCommand({ Bucket:  bucket, Key: key});
   const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
@@ -55,7 +56,8 @@ async function listObjects(){
 
   const s3Client = new S3Client({
       region: region,
-      credentials: credentials
+      credentials: credentials,
+      forcePathStyle: true,
     });
   let command = new ListObjectsCommand({ Bucket: bucket, Prefix: file_prefix});
   let result = await s3Client.send(command)
@@ -105,7 +107,7 @@ async function upload(file){
     let bucket      = store.inputs.awsConfig.bucket.value
     let uploadPartSize = "5242880"
     let file_prefix =  "files"
-    const config = { region: region,  credentials: credentials  }
+    const config = { region: region, credentials: credentials, forcePathStyle: true }
 
     const uploadParams = {
       Bucket:  bucket,
@@ -149,7 +151,8 @@ async function deleteKey (key) {
    
   const s3Client = new S3Client({
     region: region,
-    credentials: credentials
+    credentials: credentials,
+    forcePathStyle: true,
   });
 
   let params = { Bucket:  bucket, Key: key}

@@ -22,23 +22,18 @@ export const store = reactive({
   },
   inputs:{
     awsLogin:{
-      username: { 
-        label: "Username", 
-        type: "select",
-        placeholder: "Enter your username...",
-        information: "This is your AWS Cognito username",
-        readonly: true,
-        value: "admin",
-        options:[
-          {text:"admin", value: "admin"},
-          {text:"guest", value: "guest"},
-        ],
+      accessKeyId: {
+        label: "AWS Access Key ID",
+        type: "text",
+        placeholder: "Enter AWS Access Key ID...",
+        information: "Your IAM user Access Key ID",
+        value: ""
       },
-      password: { 
-        label: "Password", 
+      secretAccessKey: {
+        label: "AWS Secret Access Key",
         type: "password",
-        placeholder: "Enter password here...",
-        information: "Enter password here...",
+        placeholder: "Enter AWS Secret Access Key...",
+        information: "Your IAM user Secret Access Key",
         value: ""
       },
     },
@@ -96,6 +91,13 @@ export const store = reactive({
         type: "text",
         placeholder: "Enter Auth Proxy URL here...",
         information: "HTTPS endpoint that proxies Cognito authentication",
+        value: ""
+      },
+      auth_login_url: {
+        label: "Auth Login URL",
+        type: "text",
+        placeholder: "Enter Cognito Hosted UI login URL here...",
+        information: "Cognito Hosted UI login URL",
         value: ""
       },
     },
