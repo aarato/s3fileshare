@@ -61,12 +61,7 @@ async function loadConfig() {
       const awsConfig = JSON.parse(localStorage.getItem("awsConfig"))
       store.inputs.awsConfig.bucket.value         = awsConfig.bucket
       store.inputs.awsConfig.region.value         = awsConfig.region
-      store.inputs.awsConfig.userPoolId.value     = awsConfig.userPoolId
-      store.inputs.awsConfig.clientId.value       = awsConfig.clientId
-      store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
       store.inputs.awsConfig.websocket_api.value  = awsConfig.websocket_api
-      store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
-      store.inputs.awsConfig.auth_login_url.value = awsConfig.auth_login_url
     } catch (error) {
       message("Invalid local configuration! Reverting to default config...")
       localStorage.removeItem("awsConfig")
@@ -81,12 +76,7 @@ async function loadConfig() {
       const awsConfig = await res.json().catch(() => null);
       store.inputs.awsConfig.bucket.value         = awsConfig.bucket
       store.inputs.awsConfig.region.value         = awsConfig.region
-      store.inputs.awsConfig.userPoolId.value     = awsConfig.userPoolId
-      store.inputs.awsConfig.clientId.value       = awsConfig.clientId
-      store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
       store.inputs.awsConfig.websocket_api.value  = awsConfig.websocket_api
-      store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
-      store.inputs.awsConfig.auth_login_url.value = awsConfig.auth_login_url
     } else {
       message(`${res.statusText} - ${configUrl}`)
       return false;

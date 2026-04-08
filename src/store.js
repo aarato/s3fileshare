@@ -38,18 +38,18 @@ export const store = reactive({
       },
     },
     awsConfig:{
-      bucket: { 
-        label: "AWS S3 Bucket Name", 
+      bucket: {
+        label: "AWS S3 Bucket Name",
         type: "text",
         placeholder: "Enter AWS S3 Bucket Name here...",
         information: "Enter AWS S3 Bucket Name here...",
         value: ""
       },
-      region: { 
-        label: "AWS Region", 
+      region: {
+        label: "AWS Region",
         type: "select",
         placeholder: "Pick your AWS region",
-        information: "AWS Region Identifier. Pick us-east-1 for easy S3 bucket naming.",
+        information: "AWS Region Identifier. Must be us-east-1 for s3.amazonaws.com path-style URL.",
         value: "us-east-1",
         options:[
           {text:"us-east-1", value: "us-east-1"},
@@ -58,46 +58,11 @@ export const store = reactive({
           {text:"us-west-2", value: "us-west-2"},
         ],
       },
-      userPoolId: { 
-        label: "AWS User Pool Id", 
-        type: "text",
-        placeholder: "Enter AWS User Pool Id here...",
-        information: "Enter AWS User Pool Id here...",
-        value: "" //e.g us-east-1_WvkalowgA
-      },
-      clientId: { 
-        label: "AWS User Pool Client Id", 
-        type: "text",
-        placeholder: "Enter AWS Client Id here...",
-        information: "Enter AWS Client Id here...",
-        value: "" // e.g 7i36jg8gdgooafqhf46up4v704
-      },
-      identityPoolId: { 
-        label: "AWS Identity Pool Id", 
-        type: "text",
-        placeholder: "Enter AWS Identity Pool Id here...",
-        information: "Enter AWS Identity Pool Id here...",
-        value: "" // e.g us-east-1:94c5e4cf-d7bf-4d9c-916b-c8099e9150fe
-      },    
       websocket_api: {
         label: "Websocket API",
         type: "text",
-        placeholder: "Enter AWS User Pool Id here...",
-        information: "(e.g.) wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod",
-        value: "" // e.g wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod
-      },
-      auth_proxy_url: {
-        label: "Auth Proxy URL",
-        type: "text",
-        placeholder: "Enter Auth Proxy URL here...",
-        information: "HTTPS endpoint that proxies Cognito authentication",
-        value: ""
-      },
-      auth_login_url: {
-        label: "Auth Login URL",
-        type: "text",
-        placeholder: "Enter Cognito Hosted UI login URL here...",
-        information: "Cognito Hosted UI login URL",
+        placeholder: "wss://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod",
+        information: "WebSocket API Gateway URL for real-time clipboard",
         value: ""
       },
     },

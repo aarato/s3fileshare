@@ -12,18 +12,13 @@ function message(msg){
 
 
 async function download(){
-  const configUrl =  `https://${store.inputs.awsConfig.bucket.value}.s3.${store.inputs.awsConfig.region.value}.amazonaws.com/awsconfig.json`
+  const configUrl = `https://s3.amazonaws.com/${store.inputs.awsConfig.bucket.value}/awsconfig.json`
   const res = await fetch(configUrl);
   if (res.ok) {
     const awsConfig = await res.json().catch(()=> null);
     store.inputs.awsConfig.bucket.value = awsConfig.bucket
     store.inputs.awsConfig.region.value = awsConfig.region
-    store.inputs.awsConfig.userPoolId.value = awsConfig.userPoolId
-    store.inputs.awsConfig.clientId.value = awsConfig.clientId
-    store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
     store.inputs.awsConfig.websocket_api.value = awsConfig.websocket_api
-    store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
-    store.inputs.awsConfig.auth_login_url.value = awsConfig.auth_login_url
   }
   else{
     message(`${res.statusText} - ${configUrl}`)
@@ -36,12 +31,7 @@ function save(){
   const awsConfig = {}
   awsConfig.bucket = store.inputs.awsConfig.bucket.value
   awsConfig.region = store.inputs.awsConfig.region.value
-  awsConfig.userPoolId = store.inputs.awsConfig.userPoolId.value
-  awsConfig.clientId = store.inputs.awsConfig.clientId.value
-  awsConfig.identityPoolId = store.inputs.awsConfig.identityPoolId.value
   awsConfig.websocket_api = store.inputs.awsConfig.websocket_api.value
-  awsConfig.auth_proxy_url = store.inputs.awsConfig.auth_proxy_url.value
-  awsConfig.auth_login_url = store.inputs.awsConfig.auth_login_url.value
   localStorage.setItem("awsConfig",JSON.stringify(awsConfig))
 }
 
