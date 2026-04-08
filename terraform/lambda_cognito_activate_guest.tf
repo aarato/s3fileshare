@@ -92,7 +92,8 @@ resource "aws_s3_bucket_notification" "cognito_activate_guest" {
     # filter_prefix       = "files/guestpin.txt"
   }
   depends_on = [
-    aws_s3_object.css
+    aws_s3_object.css,
+    aws_lambda_permission.s3_permission
   ]
 }
 
