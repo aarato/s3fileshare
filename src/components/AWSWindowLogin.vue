@@ -112,7 +112,7 @@ onMounted(async () => {
           </span>
         </div>
         <div class="card-body p-4">
-          <WindowInput id="awsLogin"/>
+          <WindowInput id="awsLogin" @submit="login"/>
           <div class="d-flex justify-content-center mt-2">
             <button class="btn btn-primary px-4" @click="login" :disabled="state.loggingIn">
               <span v-if="state.loggingIn" class="spinner-border spinner-border-sm me-2" role="status"></span>
