@@ -84,12 +84,19 @@ export const store = reactive({
         information: "Enter AWS Identity Pool Id here...",
         value: "" // e.g us-east-1:94c5e4cf-d7bf-4d9c-916b-c8099e9150fe
       },    
-      websocket_api: { 
-        label: "Websocket API", 
+      websocket_api: {
+        label: "Websocket API",
         type: "text",
         placeholder: "Enter AWS User Pool Id here...",
         information: "(e.g.) wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod",
         value: "" // e.g wss://a36mhyc4r7.execute-api.us-east-1.amazonaws.com/prod
+      },
+      auth_proxy_url: {
+        label: "Auth Proxy URL",
+        type: "text",
+        placeholder: "Enter Auth Proxy URL here...",
+        information: "HTTPS endpoint that proxies Cognito authentication",
+        value: ""
       },
     },
     login:{

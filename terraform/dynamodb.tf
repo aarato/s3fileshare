@@ -4,7 +4,7 @@
 
 module "dynamodb_table" {
   source   = "terraform-aws-modules/dynamodb-table/aws"
-  version = "~> 3.1.2"
+  version = "~> 4.0"
   name     = "${local.name}_clipboard_connection_table"
   hash_key = "connectionId"
 

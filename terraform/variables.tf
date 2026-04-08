@@ -71,5 +71,8 @@ locals {
   clipboard_sendmessage_name             = "${lower(local.name)}-${lower(var.app_environment)}-clipboard_sendmessage"
   clipboard_sendmessage_source_dir       = "${path.module}/aws_lambda_functions/clipboard_sendmessage"
   clipboard_sendmessage_zip_file         = "${path.module}/aws_lambda_functions/${local.clipboard_sendmessage_name}.zip"
+  auth_proxy_name                        = "${lower(local.name)}-${lower(var.app_environment)}-auth_proxy"
+  auth_proxy_source_dir                  = "${path.module}/aws_lambda_functions/auth_proxy"
+  auth_proxy_zip_file                    = "${path.module}/aws_lambda_functions/${lower(local.name)}-${lower(var.app_environment)}-auth_proxy.zip"
 }
 

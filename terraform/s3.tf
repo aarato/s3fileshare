@@ -59,7 +59,7 @@ resource "aws_s3_bucket_policy" "account" {
 
 
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
-  bucket = local.name
+  bucket = aws_s3_bucket.account.id
   rule {
     id      = "files"
     filter {
@@ -73,7 +73,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 }
 
 resource "aws_s3_bucket_cors_configuration" "this" {
-  bucket = local.name
+  bucket = aws_s3_bucket.account.id
 
   cors_rule {
     allowed_headers = ["*"]
@@ -87,7 +87,7 @@ resource "aws_s3_bucket_cors_configuration" "this" {
 resource "aws_s3_object" "awsconfig" {
   bucket = aws_s3_bucket.account.id
   key    = "awsconfig.json"
-  content = data.template_file.aws_config.rendered
+  content = local.aws_config
   content_type = "text/json"
   # etag = filemd5(data.template_file.aws_config)
 }

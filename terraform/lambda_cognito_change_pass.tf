@@ -7,7 +7,7 @@ resource "aws_lambda_function" "cognito_change_pass" {
   function_name = local.cognito_change_pass_name
   description = local.cognito_change_pass_name
   handler       = "index.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.12"
   timeout       = 5
 
   filename         = local.cognito_change_pass_zip_file
@@ -41,23 +41,25 @@ resource "aws_iam_role" "cognito_change_pass" {
     ]
   })
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
-  inline_policy {
-    name = "lambda-logs-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-          Resource = "arn:aws:logs:*:*:*"
-        }
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "cognito_change_pass_logs" {
+  name = "lambda-logs-policy"
+  role = aws_iam_role.cognito_change_pass.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
 }
 
 resource "aws_cloudwatch_log_group" "cognito_change_pass" {

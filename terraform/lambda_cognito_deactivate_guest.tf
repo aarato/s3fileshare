@@ -7,7 +7,7 @@ resource "aws_lambda_function" "cognito_deactivate_guest" {
   function_name = local.cognito_deactivate_guest_name
   description = local.cognito_deactivate_guest_name
   handler       = "index.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.12"
   timeout       = 5
 
   filename         = local.cognito_deactivate_guest_zip_file
@@ -42,33 +42,35 @@ resource "aws_iam_role" "cognito_deactivate_guest" {
     ]
   })
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
-  inline_policy {
-    name = "lambda-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-          Resource = "arn:aws:logs:*:*:*"
-        },
-        {
-          Sid = "S3ReadAccess"
-          Effect = "Allow"
-          Action = [
-            "s3:GetObject"
-          ]
-          Resource = [
-            "arn:aws:s3:::${aws_s3_bucket.account.id}/*"
-          ]
-        }        
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "cognito_deactivate_guest_policy" {
+  name = "lambda-policy"
+  role = aws_iam_role.cognito_deactivate_guest.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Sid = "S3ReadAccess"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject"
+        ]
+        Resource = [
+          "arn:aws:s3:::${aws_s3_bucket.account.id}/*"
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_cloudwatch_log_group" "cognito_deactivate_guest" {

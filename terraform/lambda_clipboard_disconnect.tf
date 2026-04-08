@@ -6,7 +6,7 @@ resource "aws_lambda_function" "clipboard_disconnect" {
   function_name = local.clipboard_disconnect_name
   description = local.clipboard_disconnect_name
   handler       = "index.lambda_handler"
-  runtime       = "nodejs16.x"
+  runtime       = "nodejs22.x"
   timeout       = 5
 
   filename         = local.clipboard_disconnect_zip_file
@@ -25,10 +25,21 @@ resource "aws_lambda_function" "clipboard_disconnect" {
   ]
 }
 
+resource "null_resource" "npm_install_clipboard_disconnect" {
+  triggers = {
+    package_json = filemd5("${local.clipboard_disconnect_source_dir}/package.json")
+  }
+  provisioner "local-exec" {
+    command     = "npm install --omit=dev"
+    working_dir = local.clipboard_disconnect_source_dir
+  }
+}
+
 data "archive_file" "clipboard_disconnect" {
   type        = "zip"
-  source_dir = local.clipboard_disconnect_source_dir
+  source_dir  = local.clipboard_disconnect_source_dir
   output_path = local.clipboard_disconnect_zip_file
+  depends_on  = [null_resource.npm_install_clipboard_disconnect]
 }
 
 resource "aws_lambda_permission" "clipboard_disconnect" {
@@ -54,23 +65,25 @@ resource "aws_iam_role" "clipboard_disconnect" {
       },
     ]
   })
-  inline_policy {
-    name = "lambda-logs-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-          Resource = "arn:aws:logs:*:*:*"
-        }
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "clipboard_disconnect_logs" {
+  name = "lambda-logs-policy"
+  role = aws_iam_role.clipboard_disconnect.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "clipboard_disconnect" {

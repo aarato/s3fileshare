@@ -1,8 +1,9 @@
 {
-    "region"        : "${region}",
-    "bucket"        : "${bucket}",
-    "userPoolId"    : "${userPoolId}",
-    "clientId"      : "${clientId}",
-    "identityPoolId": "${identityPoolId}",
-    "websocket_api": "${websocket_api}"
+    "region"         : "${region}",
+    "bucket"         : "${bucket}",
+    "userPoolId"     : "${userPoolId}",
+    "clientId"       : "${clientId}",
+    "identityPoolId" : "${identityPoolId}",
+    "websocket_api"  : "${websocket_api}",
+    "auth_proxy_url" : "${auth_proxy_url}"
 }

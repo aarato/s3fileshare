@@ -23,3 +23,7 @@ output "aws_cognito_user_pool_id" {
 output "aws_s3_bucket_arn" {
   value = aws_s3_bucket.account.arn
 }
+
+output "auth_proxy_url" {
+  value = "${trimsuffix(aws_apigatewayv2_stage.auth_proxy.invoke_url, "/")}/auth"
+}

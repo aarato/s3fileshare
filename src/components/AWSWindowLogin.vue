@@ -4,7 +4,6 @@ import WindowInput from "./WindowInput.vue";
 import { store } from '../store.js'
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import {	AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts"
 import { getUnixTime } from 'date-fns'
 import { Toast, Modal } from "bootstrap" ;
@@ -28,48 +27,36 @@ function aws_config(){
 }
 
 async function getIdToken () {
-  const username        = store.inputs.awsLogin.username.value
-  const password        = store.inputs.awsLogin.password.value
-  const userPoolId      = store.inputs.awsConfig.userPoolId.value
-  const clientId        = store.inputs.awsConfig.clientId.value
+  const username       = store.inputs.awsLogin.username.value
+  const password       = store.inputs.awsLogin.password.value
+  const authProxyUrl   = store.inputs.awsConfig.auth_proxy_url.value
 
-  var authenticationDetails = new AuthenticationDetails({
-      Username : username,
-      Password : password,
-  });
-
-  var userPool = new CognitoUserPool({ 
-      UserPoolId : userPoolId,
-      ClientId : clientId
-  });
-  
-  var cognitoUser = new CognitoUser({
-      Username : username,
-      Pool : userPool
-  });
-
-  // Return idToken
-  const t = await new Promise((resolve, reject) => {
-    cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
-            // var accessToken = result.getAccessToken().getJwtToken();
-            /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer */
-            let idToken = result.idToken.jwtToken;
-            localStorage.setItem( "idToken", idToken)
-            localStorage.setItem( "idToken_expiration", getUnixTime(Date.now()) + 3600) // 1 hour expiration
-            resolve(idToken)
-        },
-        onFailure: function(err) {
-            store.aws.idToken = ""    
-            localStorage.removeItem( "idToken")
-            localStorage.removeItem( "idToken_expiration")
-            message(err.message)
-            console.log(err);
-            resolve(null)
-        },
-    });    
-  });
-  return t;
+  try {
+    const res = await fetch(authProxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      store.aws.idToken = ""
+      localStorage.removeItem("idToken")
+      localStorage.removeItem("idToken_expiration")
+      message(data.error || 'Login failed')
+      return null
+    }
+    const idToken = data.idToken
+    localStorage.setItem("idToken", idToken)
+    localStorage.setItem("idToken_expiration", getUnixTime(Date.now()) + 3600)
+    return idToken
+  } catch (err) {
+    store.aws.idToken = ""
+    localStorage.removeItem("idToken")
+    localStorage.removeItem("idToken_expiration")
+    message("Network error: " + err.message)
+    console.log(err)
+    return null
+  }
 }
 
 
@@ -135,6 +122,7 @@ onMounted( async () => {
       store.inputs.awsConfig.clientId.value = awsConfig.clientId
       store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
       store.inputs.awsConfig.websocket_api.value = awsConfig.websocket_api
+      store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
     } catch (error) {
       message("Invalid local configuration! Reverting to default config...")
       localStorage.removeItem("awsConfig")
@@ -157,6 +145,7 @@ onMounted( async () => {
       store.inputs.awsConfig.clientId.value = awsConfig.clientId
       store.inputs.awsConfig.identityPoolId.value = awsConfig.identityPoolId
       store.inputs.awsConfig.websocket_api.value = awsConfig.websocket_api
+      store.inputs.awsConfig.auth_proxy_url.value = awsConfig.auth_proxy_url
     }
     else{
       message(`${res.statusText} - ${configUrl}`)

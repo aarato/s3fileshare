@@ -37,7 +37,7 @@ resource "aws_lambda_function" "create_cognito_user" {
   function_name = local.create_cognito_user_name
   description = local.create_cognito_user_name
   handler       = "index.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.12"
   timeout       = 5
 
   filename         = local.create_cognito_user_zip_file
@@ -71,23 +71,25 @@ resource "aws_iam_role" "create_cognito_user" {
     ]
   })
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonCognitoPowerUser"]
-  inline_policy {
-    name = "lambda-logs-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect   = "Allow"
-          Action   = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-          Resource = "arn:aws:logs:*:*:*"
-        }
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "create_cognito_user_logs" {
+  name = "lambda-logs-policy"
+  role = aws_iam_role.create_cognito_user.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
 }
 
 resource "aws_cloudwatch_log_group" "create_cognito_user" {

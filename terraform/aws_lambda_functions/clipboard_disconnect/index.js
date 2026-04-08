@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
-const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
+const client = new DynamoDBClient({ region: process.env.AWS_REGION });
+const ddb = DynamoDBDocumentClient.from(client);
 
 exports.lambda_handler = async event => {
   const deleteParams = {
@@ -11,11 +13,11 @@ exports.lambda_handler = async event => {
   };
 
   try {
-    console.log("BEFORE WRITE CONN TO DB:",event.requestContext.connectionId)
-    await ddb.delete(deleteParams).promise();
-    console.log("AFTER WRITE CONN TO DB:",event.requestContext.connectionId)
+    console.log("BEFORE DELETE CONN FROM DB:", event.requestContext.connectionId);
+    await ddb.send(new DeleteCommand(deleteParams));
+    console.log("AFTER DELETE CONN FROM DB:", event.requestContext.connectionId);
   } catch (err) {
-    console.log("MY DISCONNECT ERROR",err)
+    console.log("MY DISCONNECT ERROR", err);
     return { statusCode: 500, body: 'Failed to disconnect: ' + JSON.stringify(err) };
   }
 

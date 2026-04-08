@@ -91,7 +91,6 @@ resource "aws_iam_role_policy" "cognito_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "mobileanalytics:PutEvents",
         "cognito-sync:*",
         "cognito-identity:*"
       ],
@@ -171,7 +170,7 @@ resource "aws_iam_role_policy" "apigateway_invoke" {
                 "execute-api:Invoke",
                 "execute-api:ManageConnections"
             ],
-            "Resource": "arn:aws:execute-api:*:*:*"
+            "Resource": "${aws_apigatewayv2_api.clipboard.execution_arn}/*"
         }
     ]
 }
