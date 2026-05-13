@@ -107,7 +107,7 @@ async function upload(file){
     let credentials = store.aws.credentials
     let region      = store.inputs.awsConfig.region.value
     let bucket      = store.inputs.awsConfig.bucket.value
-    let uploadPartSize = "5242880"
+    let uploadPartSize = 5242880
     let file_prefix =  "files"
     const config = { region: region, credentials: credentials, forcePathStyle: true, endpoint: "https://s3.amazonaws.com" }
 
